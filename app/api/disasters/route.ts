@@ -137,6 +137,49 @@ JSON만 반환하고 다른 설명은 추가하지 마세요.`
 
     console.log('Disaster saved successfully:', data.id)
 
+    // AI 브리핑 생성
+    try {
+      const briefingMessage = await anthropic.messages.create({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 512,
+        messages: [
+          {
+            role: 'user',
+            content: `다음 재난 상황에 대한 간결한 브리핑을 작성해주세요:
+
+재난 유형: ${analysisResult.disaster_type}
+위치: ${analysisResult.address}
+층수: ${analysisResult.floor || '정보 없음'}
+요구조자: ${analysisResult.trapped_people ? '있음' : '없음'}
+상황: ${analysisResult.description}
+
+브리핑 형식:
+- 3-5개의 짧은 문장
+- 핵심 정보 위주
+- 즉각적인 조치사항 포함
+- 관제사가 빠르게 파악할 수 있도록 작성`
+          }
+        ]
+      })
+
+      const briefingText = briefingMessage.content[0].type === 'text'
+        ? briefingMessage.content[0].text
+        : '브리핑 생성 실패'
+
+      await supabase
+        .from('ai_briefings')
+        .insert({
+          disaster_id: data.id,
+          briefing_text: briefingText,
+          briefing_type: 'situation'
+        })
+
+      console.log('AI briefing created')
+    } catch (briefingError) {
+      console.error('Failed to create AI briefing:', briefingError)
+      // 브리핑 실패해도 재난 접수는 성공으로 처리
+    }
+
     return NextResponse.json({
       success: true,
       disaster: data,

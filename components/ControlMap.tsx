@@ -311,7 +311,25 @@ export default function ControlMap() {
       .eq('status', 'active')
 
     if (!error && data) {
-      setDisasters(data)
+      console.log('Loaded disasters:', data)
+      // PostGIS POINT 데이터 파싱
+      const parsedData = data.map(disaster => {
+        if (disaster.location && typeof disaster.location === 'string') {
+          // "POINT(lng lat)" 형식 파싱
+          const match = disaster.location.match(/POINT\(([^ ]+) ([^ ]+)\)/)
+          if (match) {
+            disaster.location = {
+              type: 'Point',
+              coordinates: [parseFloat(match[1]), parseFloat(match[2])]
+            }
+          }
+        }
+        return disaster
+      })
+      console.log('Parsed disasters:', parsedData)
+      setDisasters(parsedData)
+    } else if (error) {
+      console.error('Error loading disasters:', error)
     }
   }
 
@@ -322,7 +340,23 @@ export default function ControlMap() {
       .in('status', ['deployed', 'active'])
 
     if (!error && data) {
-      setUnits(data)
+      console.log('Loaded units:', data)
+      // PostGIS POINT 데이터 파싱
+      const parsedData = data.map(unit => {
+        if (unit.current_location && typeof unit.current_location === 'string') {
+          const match = unit.current_location.match(/POINT\(([^ ]+) ([^ ]+)\)/)
+          if (match) {
+            unit.current_location = {
+              type: 'Point',
+              coordinates: [parseFloat(match[1]), parseFloat(match[2])]
+            }
+          }
+        }
+        return unit
+      })
+      setUnits(parsedData)
+    } else if (error) {
+      console.error('Error loading units:', error)
     }
   }
 
@@ -333,7 +367,23 @@ export default function ControlMap() {
       .order('created_at', { ascending: false })
 
     if (!error && data) {
-      setHazards(data)
+      console.log('Loaded hazards:', data)
+      // PostGIS POINT 데이터 파싱
+      const parsedData = data.map(hazard => {
+        if (hazard.location && typeof hazard.location === 'string') {
+          const match = hazard.location.match(/POINT\(([^ ]+) ([^ ]+)\)/)
+          if (match) {
+            hazard.location = {
+              type: 'Point',
+              coordinates: [parseFloat(match[1]), parseFloat(match[2])]
+            }
+          }
+        }
+        return hazard
+      })
+      setHazards(parsedData)
+    } else if (error) {
+      console.error('Error loading hazards:', error)
     }
   }
 

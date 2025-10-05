@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import ControlMap from '@/components/ControlMap'
 import DisasterReportForm from '@/components/DisasterReportForm'
+import AIBriefing from '@/components/AIBriefing'
 
 export default function Home() {
   const [activeDisasters, setActiveDisasters] = useState<any[]>([])
@@ -48,12 +49,7 @@ export default function Home() {
             </div>
 
             {/* AI 브리핑 */}
-            <div className="bg-white rounded-lg shadow-md p-4">
-              <h2 className="text-xl font-semibold mb-4">AI 상황 브리핑</h2>
-              <div className="bg-gray-50 rounded p-3 h-[200px] overflow-y-auto">
-                <p className="text-sm text-gray-600">실시간 AI 브리핑이 표시됩니다...</p>
-              </div>
-            </div>
+            <AIBriefing />
 
             {/* 활성 재난 현황 */}
             <div className="bg-white rounded-lg shadow-md p-4">
