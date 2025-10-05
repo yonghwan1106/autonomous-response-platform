@@ -322,14 +322,12 @@ export default function ControlMap() {
   }, [disasters, units, hazards])
 
   const loadDisasters = async () => {
-    const { data, error } = await supabase
-      .from('disasters')
-      .select('*')
-      .eq('status', 'active')
+    // RPC 함수를 사용하여 location을 GeoJSON 형식으로 가져오기
+    const { data, error } = await supabase.rpc('get_active_disasters')
 
     if (!error && data) {
-      console.log('Loaded disasters:', data)
-      setDisasters(data || [])
+      console.log('Loaded disasters with GeoJSON location:', data)
+      setDisasters(data)
     } else if (error) {
       console.error('Error loading disasters:', error)
       setDisasters([])
@@ -337,14 +335,12 @@ export default function ControlMap() {
   }
 
   const loadUnits = async () => {
-    const { data, error } = await supabase
-      .from('response_units')
-      .select('*')
-      .in('status', ['deployed', 'active'])
+    // RPC 함수를 사용하여 current_location을 GeoJSON 형식으로 가져오기
+    const { data, error } = await supabase.rpc('get_active_units')
 
     if (!error && data) {
-      console.log('Loaded units:', data)
-      setUnits(data || [])
+      console.log('Loaded units with GeoJSON location:', data)
+      setUnits(data)
     } else if (error) {
       console.error('Error loading units:', error)
       setUnits([])
@@ -352,14 +348,12 @@ export default function ControlMap() {
   }
 
   const loadHazards = async () => {
-    const { data, error } = await supabase
-      .from('hazard_overlays')
-      .select('*')
-      .order('created_at', { ascending: false })
+    // RPC 함수를 사용하여 location을 GeoJSON 형식으로 가져오기
+    const { data, error } = await supabase.rpc('get_hazard_overlays')
 
     if (!error && data) {
-      console.log('Loaded hazards:', data)
-      setHazards(data || [])
+      console.log('Loaded hazards with GeoJSON location:', data)
+      setHazards(data)
     } else if (error) {
       console.error('Error loading hazards:', error)
       setHazards([])

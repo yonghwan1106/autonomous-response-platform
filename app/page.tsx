@@ -9,16 +9,12 @@ import AIBriefing from '@/components/AIBriefing'
 export default function Home() {
   const [activeDisasters, setActiveDisasters] = useState<any[]>([])
 
-  // DB에서 활성 재난 데이터 로드
+  // DB에서 활성 재난 데이터 로드 (GeoJSON 형식으로)
   const loadActiveDisasters = async () => {
-    const { data, error } = await supabase
-      .from('disasters')
-      .select('*')
-      .eq('status', 'active')
-      .order('created_at', { ascending: false })
+    const { data, error } = await supabase.rpc('get_active_disasters')
 
     if (!error && data) {
-      console.log('Loaded active disasters:', data)
+      console.log('Loaded active disasters with GeoJSON:', data)
       setActiveDisasters(data)
     } else if (error) {
       console.error('Error loading disasters:', error)
