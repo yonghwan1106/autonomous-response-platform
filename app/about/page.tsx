@@ -36,7 +36,7 @@ export default function AboutPage() {
               <h3 className="text-xl font-bold text-blue-800 mb-3">🎯 핵심 개념</h3>
               <p className="text-gray-700">
                 재난 발생 시, 인간 구조대보다 먼저 현장에 출동하는
-                <strong className="text-blue-600"> '자율주행 선발대(Autonomous First Responder)'</strong>를
+                <strong className="text-blue-600"> &apos;자율주행 선발대(Autonomous First Responder)&apos;</strong>를
                 도입하여 골든타임을 확보하고 구조 활동의 패러다임을 전환하는 새로운 공공 안전 서비스
               </p>
             </div>
@@ -53,7 +53,7 @@ export default function AboutPage() {
           <div className="bg-purple-50 p-6 rounded-lg">
             <h3 className="text-xl font-bold text-purple-800 mb-3">🎯 궁극적 목표</h3>
             <p className="text-gray-700">
-              자율주행 기술을 통해 <strong>'정보의 공백'</strong> 상태로 현장에 진입해야 했던
+              자율주행 기술을 통해 <strong>&apos;정보의 공백&apos;</strong> 상태로 현장에 진입해야 했던
               구조대원의 위험을 줄이고, 데이터에 기반한 정밀 구조 작전을 가능하게 하여
               <strong className="text-purple-600"> 국민의 생명과 안전 보호</strong>
             </p>
@@ -70,7 +70,7 @@ export default function AboutPage() {
                 1. 골든타임 확보 실패 및 국민 생명 위협
               </h3>
               <ul className="list-disc list-inside text-gray-700 space-y-2">
-                <li>재난 현장에서 초기 5~8분으로 정의되는 '골든타임'은 생존율과 직결</li>
+                <li>재난 현장에서 초기 5~8분으로 정의되는 &apos;골든타임&apos;은 생존율과 직결</li>
                 <li>소방차의 골든타임 내 현장 도착률은 약 <strong>60% 수준</strong>에 머물러 있음</li>
                 <li>교통 체증, 출동 준비 시간 등으로 인한 지연이 생명을 위협</li>
               </ul>
@@ -82,7 +82,7 @@ export default function AboutPage() {
               </h3>
               <ul className="list-disc list-inside text-gray-700 space-y-2">
                 <li>구조대원은 화재 규모, 내부 구조, 요구조자 위치 등 핵심 정보 없이 출동</li>
-                <li><strong>'정보의 안개'</strong> 속에서 위험한 임무 시작</li>
+                <li><strong>&apos;정보의 안개&apos;</strong> 속에서 위험한 임무 시작</li>
                 <li>소방 활동 중 발생하는 순직 및 공상자 수가 매년 지속적으로 발생</li>
               </ul>
             </div>
@@ -92,9 +92,9 @@ export default function AboutPage() {
                 3. 아날로그 방식에 머무른 초기 대응 체계
               </h3>
               <ul className="list-disc list-inside text-gray-700 space-y-2">
-                <li>신고 접수 후 인간 대원이 출동하여 현장 상황을 '눈으로' 파악하는 전통적 방식</li>
+                <li>신고 접수 후 인간 대원이 출동하여 현장 상황을 &apos;눈으로&apos; 파악하는 전통적 방식</li>
                 <li>자율주행, 드론, AI 등 4차 산업혁명 기술을 재난 대응 초기 단계에 미활용</li>
-                <li>'과학적 재난관리체계' 구축 목표 달성에 걸림돌</li>
+                <li>&apos;과학적 재난관리체계&apos; 구축 목표 달성에 걸림돌</li>
               </ul>
             </div>
           </div>
@@ -233,7 +233,7 @@ export default function AboutPage() {
               <ul className="list-disc list-inside text-gray-700 space-y-2">
                 <li>현장 진입 전 위험 요소 사전 파악으로 구조대원 안전 향상</li>
                 <li>순직 및 공상 사고 감소에 기여</li>
-                <li>'제5차 국가안전관리기본계획' 등 정부 정책 직접 구현</li>
+                <li>&apos;제5차 국가안전관리기본계획&apos; 등 정부 정책 직접 구현</li>
               </ul>
             </div>
 
