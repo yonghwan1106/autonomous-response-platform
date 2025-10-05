@@ -179,12 +179,28 @@ export default function ControlMap() {
     markersRef.current.forEach(marker => marker.setMap(null))
     markersRef.current.clear()
 
+    // 가장 최근 재난 위치로 지도 이동 (첫 번째 재난)
+    if (disasters.length > 0) {
+      const latestDisaster = disasters[0]
+      console.log('최근 재난:', latestDisaster)
+
+      if (latestDisaster.location && Array.isArray(latestDisaster.location.coordinates) && latestDisaster.location.coordinates.length === 2) {
+        const [lng, lat] = latestDisaster.location.coordinates
+        const moveLatLng = new window.kakao.maps.LatLng(lat, lng)
+        mapInstance.current.setCenter(moveLatLng)
+        mapInstance.current.setLevel(5) // 적절한 줌 레벨
+        console.log('지도 이동:', lat, lng)
+      } else {
+        console.warn('최근 재난에 유효한 location이 없습니다:', latestDisaster)
+      }
+    }
+
     // 재난 마커 추가
     disasters.forEach(disaster => {
       console.log('Processing disaster:', disaster.id, 'location:', disaster.location)
 
       if (!disaster.location || !disaster.location.coordinates) {
-        console.warn('Disaster has no location:', disaster.id)
+        console.warn('Disaster has no location:', disaster.id, disaster)
         return
       }
 

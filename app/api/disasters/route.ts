@@ -57,12 +57,18 @@ export async function POST(request: NextRequest) {
 
 다음 형식의 JSON만 반환하세요:
 {
-  "address": "주소 (예: 서울시 강남구 테헤란로 123)",
+  "address": "도로명 또는 지번 주소 (예: 서울특별시 강남구 테헤란로 123, 경기도 용인시 수지구 성복동 123)",
   "disaster_type": "재난 유형 (화재, 구조, 응급의료 등)",
   "floor": 층수 (숫자만, 없으면 null),
   "trapped_people": 사람이 갇혀있는지 여부 (true/false),
   "description": "간단한 상황 설명"
 }
+
+주소 추출 시 중요사항:
+- 시/도 + 시/군/구 + 읍/면/동을 포함한 정확한 주소를 작성하세요
+- 아파트/빌딩명만 있으면 앞에 시/도/구/동을 추가하세요
+- 예: "용인 수지구 성복동 엘지빌리지" → "경기도 용인시 수지구 성복동"
+- 예: "강남 테헤란로 빌딩" → "서울특별시 강남구 테헤란로"
 
 JSON만 반환하고 다른 설명은 추가하지 마세요.`
           }
@@ -111,13 +117,22 @@ JSON만 반환하고 다른 설명은 추가하지 마세요.`
     // 주소를 좌표로 변환
     let geoResult = null
     if (analysisResult.address) {
-      console.log('Geocoding address:', analysisResult.address)
+      console.log('🗺️ Geocoding 시작:', analysisResult.address)
       geoResult = await geocodeAddress(analysisResult.address)
       if (geoResult) {
-        console.log('Geocoding successful:', geoResult.lng, geoResult.lat)
+        console.log('✅ Geocoding 성공:', {
+          address: analysisResult.address,
+          lng: geoResult.lng,
+          lat: geoResult.lat
+        })
       } else {
-        console.warn('Geocoding failed for address:', analysisResult.address)
+        console.error('❌ Geocoding 실패:', {
+          address: analysisResult.address,
+          message: 'Kakao API가 주소를 찾지 못했습니다. 더 정확한 주소가 필요합니다.'
+        })
       }
+    } else {
+      console.warn('⚠️ 주소 정보가 없습니다:', analysisResult)
     }
 
     // Supabase에 재난 정보 저장 (RPC 함수 사용)
