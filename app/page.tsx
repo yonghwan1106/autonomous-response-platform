@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import SimpleMap from '@/components/SimpleMap'
+import ControlMap from '@/components/ControlMap'
 import DisasterReportForm from '@/components/DisasterReportForm'
 
 export default function Home() {
@@ -36,7 +36,7 @@ export default function Home() {
           {/* 좌측: 관제 지도 영역 */}
           <div className="lg:col-span-2 bg-white rounded-lg shadow-md p-4">
             <h2 className="text-xl font-semibold mb-4">통합 관제 지도</h2>
-            <SimpleMap />
+            <ControlMap />
           </div>
 
           {/* 우측: 재난 정보 및 AI 브리핑 */}

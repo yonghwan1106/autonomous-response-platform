@@ -85,10 +85,12 @@ CREATE EXTENSION IF NOT EXISTS postgis;
    - 로컬 개발: `http://localhost:3000`
    - Vercel 배포: `https://your-app.vercel.app`
 
-### 2.3 JavaScript 키 확인
+### 2.3 API 키 확인
 
 1. "요약 정보" 탭으로 이동
-2. "JavaScript 키" 복사
+2. 다음 두 키를 복사:
+   - **JavaScript 키**: 브라우저에서 카카오맵 SDK 사용
+   - **REST API 키**: 서버에서 지오코딩/길찾기 API 호출 (지오코딩에 필요)
 
 ### 2.4 카카오맵 API 활성화
 
@@ -126,12 +128,17 @@ CREATE EXTENSION IF NOT EXISTS postgis;
 NEXT_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGc...
 
-# Kakao Map
+# Kakao Map (JavaScript 키 - 브라우저에서 지도 표시용)
 NEXT_PUBLIC_KAKAO_APP_KEY=your_javascript_key_here
+
+# Kakao REST API (서버에서 지오코딩용 - JavaScript 키와 동일할 수 있음)
+KAKAO_REST_API_KEY=your_rest_api_key_here
 
 # Claude API
 ANTHROPIC_API_KEY=sk-ant-...
 ```
+
+**참고**: 카카오 개발자 콘솔에서 JavaScript 키와 REST API 키가 동일한 경우가 많습니다. 두 환경 변수에 같은 값을 넣어도 됩니다.
 
 ### 4.2 의존성 설치
 
@@ -168,9 +175,12 @@ npm run dev
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase Project URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase Anon Key |
 | `NEXT_PUBLIC_KAKAO_APP_KEY` | Kakao JavaScript Key |
+| `KAKAO_REST_API_KEY` | Kakao REST API Key (JavaScript 키와 동일 가능) |
 | `ANTHROPIC_API_KEY` | Anthropic API Key |
 
 3. "Save" 클릭
+
+**중요**: `KAKAO_REST_API_KEY`를 설정하지 않으면 재난 접수 시 지오코딩이 실패할 수 있습니다.
 
 ### 5.3 배포
 
