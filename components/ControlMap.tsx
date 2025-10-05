@@ -183,21 +183,13 @@ export default function ControlMap() {
     disasters.forEach(disaster => {
       console.log('Processing disaster:', disaster.id, 'location:', disaster.location)
 
-      if (!disaster.location) {
+      if (!disaster.location || !disaster.location.coordinates) {
         console.warn('Disaster has no location:', disaster.id)
         return
       }
 
-      // GeoJSON 형식 확인
-      let lng, lat
-      if (disaster.location.coordinates) {
-        [lng, lat] = disaster.location.coordinates
-      } else if (disaster.location.type === 'Point' && disaster.location.coordinates) {
-        [lng, lat] = disaster.location.coordinates
-      } else {
-        console.warn('Unknown location format:', disaster.location)
-        return
-      }
+      // GeoJSON 형식에서 좌표 추출
+      const [lng, lat] = disaster.location.coordinates
 
       const position = new window.kakao.maps.LatLng(lat, lng)
       console.log('Creating marker at:', lat, lng)

@@ -7,6 +7,19 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 })
 
+interface DisasterRecord {
+  id: string
+  created_at: string
+  report_text: string
+  address: string
+  disaster_type: string
+  floor: number | null
+  trapped_people: boolean
+  location: any
+  status: string
+  metadata: any
+}
+
 export async function POST(request: NextRequest) {
   try {
     const { reportText } = await request.json()
@@ -123,12 +136,20 @@ JSON만 반환하고 다른 설명은 추가하지 마세요.`
           analysis: analysisResult
         }
       })
-      .single()
+      .single<DisasterRecord>()
 
     if (error) {
       console.error('Supabase error:', error)
       return NextResponse.json(
         { error: 'Failed to save disaster data', details: error.message },
+        { status: 500 }
+      )
+    }
+
+    if (!data) {
+      console.error('No data returned from insert_disaster')
+      return NextResponse.json(
+        { error: 'Failed to save disaster data', details: 'No data returned' },
         { status: 500 }
       )
     }
