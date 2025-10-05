@@ -96,35 +96,33 @@ JSON만 반환하고 다른 설명은 추가하지 마세요.`
     }
 
     // 주소를 좌표로 변환
-    let location = null
+    let geoResult = null
     if (analysisResult.address) {
       console.log('Geocoding address:', analysisResult.address)
-      const geoResult = await geocodeAddress(analysisResult.address)
+      geoResult = await geocodeAddress(analysisResult.address)
       if (geoResult) {
-        location = `POINT(${geoResult.lng} ${geoResult.lat})`
-        console.log('Geocoding successful:', location)
+        console.log('Geocoding successful:', geoResult.lng, geoResult.lat)
       } else {
         console.warn('Geocoding failed for address:', analysisResult.address)
       }
     }
 
-    // Supabase에 재난 정보 저장
+    // Supabase에 재난 정보 저장 (RPC 함수 사용)
     console.log('Saving to Supabase...')
     const { data, error } = await supabase
-      .from('disasters')
-      .insert({
-        report_text: reportText,
-        address: analysisResult.address,
-        disaster_type: analysisResult.disaster_type,
-        floor: analysisResult.floor,
-        trapped_people: analysisResult.trapped_people || false,
-        location: location,
-        metadata: {
+      .rpc('insert_disaster', {
+        p_report_text: reportText,
+        p_address: analysisResult.address,
+        p_disaster_type: analysisResult.disaster_type,
+        p_floor: analysisResult.floor,
+        p_trapped_people: analysisResult.trapped_people || false,
+        p_lng: geoResult?.lng || null,
+        p_lat: geoResult?.lat || null,
+        p_metadata: {
           description: analysisResult.description,
           analysis: analysisResult
         }
       })
-      .select()
       .single()
 
     if (error) {

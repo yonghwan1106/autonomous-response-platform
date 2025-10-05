@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { supabase } from '@/lib/supabase/client'
 import ControlMap from '@/components/ControlMap'
 import DisasterReportForm from '@/components/DisasterReportForm'
 import AIBriefing from '@/components/AIBriefing'
@@ -8,9 +9,46 @@ import AIBriefing from '@/components/AIBriefing'
 export default function Home() {
   const [activeDisasters, setActiveDisasters] = useState<any[]>([])
 
-  const handleDisasterSuccess = async (disaster: any) => {
-    setActiveDisasters(prev => [disaster, ...prev])
+  // DB에서 활성 재난 데이터 로드
+  const loadActiveDisasters = async () => {
+    const { data, error } = await supabase
+      .from('disasters')
+      .select('*')
+      .eq('status', 'active')
+      .order('created_at', { ascending: false })
 
+    if (!error && data) {
+      console.log('Loaded active disasters:', data)
+      setActiveDisasters(data)
+    } else if (error) {
+      console.error('Error loading disasters:', error)
+    }
+  }
+
+  // 초기 데이터 로드 및 Realtime 구독
+  useEffect(() => {
+    loadActiveDisasters()
+
+    // Supabase Realtime 구독
+    const channel = supabase
+      .channel('active-disasters-channel')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'disasters' },
+        (payload) => {
+          console.log('Disaster change detected:', payload)
+          loadActiveDisasters()
+        }
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
+  }, [])
+
+  const handleDisasterSuccess = async (disaster: any) => {
+    // Realtime 구독이 자동으로 업데이트하므로 수동 업데이트 불필요
     // 선발대 자동 출동
     if (disaster.location) {
       const [lng, lat] = disaster.location.coordinates

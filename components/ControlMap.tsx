@@ -12,7 +12,10 @@ declare global {
 
 interface Disaster {
   id: string
-  location: { coordinates: [number, number] }
+  location: {
+    type?: string
+    coordinates: [number, number]
+  } | null
   disaster_type: string
   address: string
 }
@@ -20,7 +23,10 @@ interface Disaster {
 interface ResponseUnit {
   id: string
   unit_type: string
-  current_location: { coordinates: [number, number] }
+  current_location: {
+    type?: string
+    coordinates: [number, number]
+  } | null
   status: string
 }
 
@@ -28,7 +34,10 @@ interface HazardOverlay {
   id: string
   disaster_id: string
   hazard_type: string
-  location: { coordinates: [number, number] } | null
+  location: {
+    type?: string
+    coordinates: [number, number]
+  } | null
   severity: string
   description: string | null
 }
