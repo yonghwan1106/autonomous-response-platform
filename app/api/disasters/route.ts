@@ -169,7 +169,7 @@ JSON만 반환하고 다른 설명은 추가하지 마세요.`
 재난 유형: ${analysisResult.disaster_type}
 위치: ${analysisResult.address}
 층수: ${analysisResult.floor || '정보 없음'}
-요구조자: ${analysisResult.trapped_people ? '있음' : '없음'}
+구조대상자: ${analysisResult.trapped_people ? '있음' : '없음'}
 상황: ${analysisResult.description}
 
 브리핑 형식:
