@@ -11,6 +11,14 @@ interface Briefing {
   created_at: string
 }
 
+// 간단한 마크다운 렌더링 함수
+function renderMarkdown(text: string): string {
+  return text
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>') // **bold** -> <strong>bold</strong>
+    .replace(/\*(.+?)\*/g, '<em>$1</em>') // *italic* -> <em>italic</em>
+    .replace(/\n/g, '<br/>') // 줄바꿈
+}
+
 export default function AIBriefing() {
   const [briefings, setBriefings] = useState<Briefing[]>([])
   const [loading, setLoading] = useState(true)
@@ -77,9 +85,10 @@ export default function AIBriefing() {
                     {new Date(briefing.created_at).toLocaleTimeString('ko-KR')}
                   </span>
                 </div>
-                <p className="text-sm text-gray-800 whitespace-pre-line">
-                  {briefing.briefing_text}
-                </p>
+                <div
+                  className="text-sm text-gray-800"
+                  dangerouslySetInnerHTML={{ __html: renderMarkdown(briefing.briefing_text) }}
+                />
               </div>
             ))}
           </div>

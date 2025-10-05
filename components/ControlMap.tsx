@@ -172,10 +172,26 @@ export default function ControlMap() {
 
     // 재난 마커 추가
     disasters.forEach(disaster => {
-      if (!disaster.location?.coordinates) return
+      console.log('Processing disaster:', disaster.id, 'location:', disaster.location)
 
-      const [lng, lat] = disaster.location.coordinates
+      if (!disaster.location) {
+        console.warn('Disaster has no location:', disaster.id)
+        return
+      }
+
+      // GeoJSON 형식 확인
+      let lng, lat
+      if (disaster.location.coordinates) {
+        [lng, lat] = disaster.location.coordinates
+      } else if (disaster.location.type === 'Point' && disaster.location.coordinates) {
+        [lng, lat] = disaster.location.coordinates
+      } else {
+        console.warn('Unknown location format:', disaster.location)
+        return
+      }
+
       const position = new window.kakao.maps.LatLng(lat, lng)
+      console.log('Creating marker at:', lat, lng)
 
       const marker = new window.kakao.maps.Marker({
         position,
@@ -312,24 +328,10 @@ export default function ControlMap() {
 
     if (!error && data) {
       console.log('Loaded disasters:', data)
-      // PostGIS POINT 데이터 파싱
-      const parsedData = data.map(disaster => {
-        if (disaster.location && typeof disaster.location === 'string') {
-          // "POINT(lng lat)" 형식 파싱
-          const match = disaster.location.match(/POINT\(([^ ]+) ([^ ]+)\)/)
-          if (match) {
-            disaster.location = {
-              type: 'Point',
-              coordinates: [parseFloat(match[1]), parseFloat(match[2])]
-            }
-          }
-        }
-        return disaster
-      })
-      console.log('Parsed disasters:', parsedData)
-      setDisasters(parsedData)
+      setDisasters(data || [])
     } else if (error) {
       console.error('Error loading disasters:', error)
+      setDisasters([])
     }
   }
 
@@ -341,22 +343,10 @@ export default function ControlMap() {
 
     if (!error && data) {
       console.log('Loaded units:', data)
-      // PostGIS POINT 데이터 파싱
-      const parsedData = data.map(unit => {
-        if (unit.current_location && typeof unit.current_location === 'string') {
-          const match = unit.current_location.match(/POINT\(([^ ]+) ([^ ]+)\)/)
-          if (match) {
-            unit.current_location = {
-              type: 'Point',
-              coordinates: [parseFloat(match[1]), parseFloat(match[2])]
-            }
-          }
-        }
-        return unit
-      })
-      setUnits(parsedData)
+      setUnits(data || [])
     } else if (error) {
       console.error('Error loading units:', error)
+      setUnits([])
     }
   }
 
@@ -368,22 +358,10 @@ export default function ControlMap() {
 
     if (!error && data) {
       console.log('Loaded hazards:', data)
-      // PostGIS POINT 데이터 파싱
-      const parsedData = data.map(hazard => {
-        if (hazard.location && typeof hazard.location === 'string') {
-          const match = hazard.location.match(/POINT\(([^ ]+) ([^ ]+)\)/)
-          if (match) {
-            hazard.location = {
-              type: 'Point',
-              coordinates: [parseFloat(match[1]), parseFloat(match[2])]
-            }
-          }
-        }
-        return hazard
-      })
-      setHazards(parsedData)
+      setHazards(data || [])
     } else if (error) {
       console.error('Error loading hazards:', error)
+      setHazards([])
     }
   }
 
