@@ -31,11 +31,17 @@ export default function DisasterReportForm({ onSuccess }: DisasterReportFormProp
         body: JSON.stringify({ reportText }),
       })
 
-      if (!response.ok) {
-        throw new Error('재난 접수에 실패했습니다.')
-      }
-
       const data = await response.json()
+
+      if (!response.ok) {
+        // 서버에서 상세 에러 메시지를 전달받음
+        const errorMessage = data.details
+          ? `${data.error}: ${data.details}`
+          : data.error || '재난 접수에 실패했습니다.'
+
+        console.error('API Error:', data)
+        throw new Error(errorMessage)
+      }
 
       if (data.success) {
         setReportText('')
@@ -44,7 +50,9 @@ export default function DisasterReportForm({ onSuccess }: DisasterReportFormProp
         throw new Error(data.error || '재난 접수에 실패했습니다.')
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다.')
+      const errorMessage = err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다.'
+      console.error('Disaster report error:', errorMessage)
+      setError(errorMessage)
     } finally {
       setLoading(false)
     }
