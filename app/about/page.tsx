@@ -109,7 +109,7 @@ export default function AboutPage() {
               <div className="text-4xl mb-4">🚗</div>
               <h3 className="text-xl font-bold text-blue-800 mb-3">모선 차량</h3>
               <p className="text-gray-700 mb-4">
-                자율주행 '모선(Mothership)' 차량에 정찰 드론, 통신 중계 드론, 소형 지상 탐사 로봇 탑재
+                자율주행 &apos;모선(Mothership)&apos; 차량에 정찰 드론, 통신 중계 드론, 소형 지상 탐사 로봇 탑재
               </p>
               <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
                 <li>C-ITS 연동 최적 경로 이동</li>
