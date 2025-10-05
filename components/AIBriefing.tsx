@@ -52,10 +52,11 @@ export default function AIBriefing() {
       .order('created_at', { ascending: false })
       .limit(5)
 
-    if (!error && data) {
-      setBriefings(data)
-    } else if (error) {
+    if (error) {
       console.error('Error loading briefings:', error)
+      setBriefings([])
+    } else {
+      setBriefings(data || [])
     }
     setLoading(false)
   }
@@ -75,10 +76,16 @@ export default function AIBriefing() {
             {briefings.map((briefing) => (
               <div
                 key={briefing.id}
-                className="bg-white p-3 rounded border-l-4 border-blue-500"
+                className={`bg-white p-3 rounded border-l-4 ${
+                  briefing.briefing_type === 'situation' ? 'border-blue-500' : 'border-green-500'
+                }`}
               >
                 <div className="flex items-start justify-between mb-2">
-                  <span className="inline-block px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
+                  <span className={`inline-block px-2 py-1 text-xs rounded ${
+                    briefing.briefing_type === 'situation'
+                      ? 'bg-blue-100 text-blue-800'
+                      : 'bg-green-100 text-green-800'
+                  }`}>
                     {briefing.briefing_type === 'situation' ? '상황 브리핑' : '작전 계획'}
                   </span>
                   <span className="text-xs text-gray-500">

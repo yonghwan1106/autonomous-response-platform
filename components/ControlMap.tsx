@@ -28,6 +28,7 @@ interface ResponseUnit {
     coordinates: [number, number]
   } | null
   status: string
+  route?: Array<{ lat: number; lng: number }>
 }
 
 interface HazardOverlay {
@@ -46,6 +47,7 @@ export default function ControlMap() {
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInstance = useRef<any>(null)
   const markersRef = useRef<Map<string, any>>(new Map())
+  const polylinesRef = useRef<Map<string, any>>(new Map())
   const [disasters, setDisasters] = useState<Disaster[]>([])
   const [units, setUnits] = useState<ResponseUnit[]>([])
   const [hazards, setHazards] = useState<HazardOverlay[]>([])
@@ -171,13 +173,17 @@ export default function ControlMap() {
     }
   }, [])
 
-  // 마커 업데이트
+  // 마커 및 경로 업데이트
   useEffect(() => {
     if (!mapInstance.current || !window.kakao) return
 
     // 기존 마커 제거
     markersRef.current.forEach(marker => marker.setMap(null))
     markersRef.current.clear()
+
+    // 기존 경로 제거
+    polylinesRef.current.forEach(polyline => polyline.setMap(null))
+    polylinesRef.current.clear()
 
     // 가장 최근 재난 위치로 지도 이동 (첫 번째 재난)
     if (disasters.length > 0) {
@@ -233,7 +239,7 @@ export default function ControlMap() {
       markersRef.current.set(`disaster-${disaster.id}`, marker)
     })
 
-    // 선발대 유닛 마커 추가
+    // 선발대 유닛 마커 및 경로 추가
     units.forEach(unit => {
       if (!unit.current_location?.coordinates) return
 
@@ -275,6 +281,29 @@ export default function ControlMap() {
       })
 
       markersRef.current.set(`unit-${unit.id}`, marker)
+
+      // 경로 표시 (route 데이터가 있는 경우)
+      if (unit.route && Array.isArray(unit.route) && unit.route.length > 0) {
+        const path = unit.route.map((point: any) => {
+          return new window.kakao.maps.LatLng(point.lat, point.lng)
+        })
+
+        // 유닛 타입별 경로 색상
+        let strokeColor = '#0066FF'
+        if (unit.unit_type === 'drone') strokeColor = '#FFB800'
+        else if (unit.unit_type === 'robot') strokeColor = '#00C73C'
+
+        const polyline = new window.kakao.maps.Polyline({
+          path: path,
+          strokeWeight: 4,
+          strokeColor: strokeColor,
+          strokeOpacity: 0.7,
+          strokeStyle: 'solid'
+        })
+
+        polyline.setMap(mapInstance.current)
+        polylinesRef.current.set(`route-${unit.id}`, polyline)
+      }
     })
 
     // 위험 요소 오버레이 마커 추가
@@ -341,12 +370,12 @@ export default function ControlMap() {
     // RPC 함수를 사용하여 location을 GeoJSON 형식으로 가져오기
     const { data, error } = await supabase.rpc('get_active_disasters')
 
-    if (!error && data) {
-      console.log('Loaded disasters with GeoJSON location:', data)
-      setDisasters(data)
-    } else if (error) {
+    if (error) {
       console.error('Error loading disasters:', error)
       setDisasters([])
+    } else {
+      console.log('Loaded disasters with GeoJSON location:', data)
+      setDisasters(data || [])
     }
   }
 
@@ -354,12 +383,12 @@ export default function ControlMap() {
     // RPC 함수를 사용하여 current_location을 GeoJSON 형식으로 가져오기
     const { data, error } = await supabase.rpc('get_active_units')
 
-    if (!error && data) {
-      console.log('Loaded units with GeoJSON location:', data)
-      setUnits(data)
-    } else if (error) {
+    if (error) {
       console.error('Error loading units:', error)
       setUnits([])
+    } else {
+      console.log('Loaded units with GeoJSON location:', data)
+      setUnits(data || [])
     }
   }
 
@@ -367,12 +396,12 @@ export default function ControlMap() {
     // RPC 함수를 사용하여 location을 GeoJSON 형식으로 가져오기
     const { data, error } = await supabase.rpc('get_hazard_overlays')
 
-    if (!error && data) {
-      console.log('Loaded hazards with GeoJSON location:', data)
-      setHazards(data)
-    } else if (error) {
+    if (error) {
       console.error('Error loading hazards:', error)
       setHazards([])
+    } else {
+      console.log('Loaded hazards with GeoJSON location:', data)
+      setHazards(data || [])
     }
   }
 
@@ -381,24 +410,41 @@ export default function ControlMap() {
       <div ref={mapRef} className="w-full h-[600px] rounded-lg" />
 
       {/* 범례 */}
-      <div className="absolute top-4 right-4 bg-white p-3 rounded-lg shadow-lg text-xs">
-        <h3 className="font-semibold mb-2">범례</h3>
-        <div className="space-y-1">
+      <div className="absolute top-4 right-4 bg-white p-4 rounded-lg shadow-xl text-xs z-50 border-2 border-gray-200">
+        <h3 className="font-bold mb-3 text-sm text-gray-800">범례</h3>
+        <div className="space-y-2">
+          <div className="font-semibold text-xs text-gray-600 mb-1">마커</div>
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-red-500 rounded-full"></div>
-            <span>재난 발생지</span>
+            <div className="w-5 h-5 bg-red-500 rounded-full flex-shrink-0"></div>
+            <span className="text-xs">재난 발생지</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-blue-500 rounded-full"></div>
-            <span>모선 차량</span>
+            <div className="w-5 h-5 bg-blue-500 rounded-full flex-shrink-0"></div>
+            <span className="text-xs">모선 차량</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-yellow-500 rounded-full"></div>
-            <span>정찰 드론 (클릭하여 열화상 보기)</span>
+            <div className="w-5 h-5 bg-yellow-500 rounded-full flex-shrink-0"></div>
+            <span className="text-xs">정찰 드론 (클릭→열화상)</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-green-500 rounded-full"></div>
-            <span>지상 로봇</span>
+            <div className="w-5 h-5 bg-green-500 rounded-full flex-shrink-0"></div>
+            <span className="text-xs">지상 로봇</span>
+          </div>
+
+          <div className="border-t border-gray-300 my-2"></div>
+
+          <div className="font-semibold text-xs text-gray-600 mb-1">이동 경로</div>
+          <div className="flex items-center gap-2">
+            <div className="w-10 h-1.5 bg-blue-500 rounded flex-shrink-0"></div>
+            <span className="text-xs">모선 경로</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-10 h-1.5 bg-yellow-500 rounded flex-shrink-0"></div>
+            <span className="text-xs">드론 경로</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-10 h-1.5 bg-green-500 rounded flex-shrink-0"></div>
+            <span className="text-xs">로봇 경로</span>
           </div>
         </div>
       </div>

@@ -47,20 +47,20 @@ RETURNS TABLE (
   disaster_type TEXT,
   floor INTEGER,
   trapped_people BOOLEAN,
-  location GEOGRAPHY,
+  location JSON,
   status TEXT,
   metadata JSONB
 ) AS $$
 DECLARE
   v_location GEOGRAPHY;
+  v_disaster_id UUID;
 BEGIN
   -- 좌표가 제공된 경우 GEOGRAPHY 포인트 생성
   IF p_lng IS NOT NULL AND p_lat IS NOT NULL THEN
     v_location := ST_SetSRID(ST_MakePoint(p_lng, p_lat), 4326)::geography;
   END IF;
 
-  -- 재난 정보 삽입 및 반환
-  RETURN QUERY
+  -- 재난 정보 삽입
   INSERT INTO disasters (
     report_text,
     address,
@@ -78,7 +78,33 @@ BEGIN
     v_location,
     p_metadata
   )
-  RETURNING *;
+  RETURNING disasters.id INTO v_disaster_id;
+
+  -- GeoJSON 형식으로 반환
+  RETURN QUERY
+  SELECT
+    d.id,
+    d.created_at,
+    d.report_text,
+    d.address,
+    d.disaster_type,
+    d.floor,
+    d.trapped_people,
+    CASE
+      WHEN d.location IS NOT NULL THEN
+        json_build_object(
+          'type', 'Point',
+          'coordinates', json_build_array(
+            ST_X(d.location::geometry),
+            ST_Y(d.location::geometry)
+          )
+        )
+      ELSE NULL
+    END AS location,
+    d.status,
+    d.metadata
+  FROM disasters d
+  WHERE d.id = v_disaster_id;
 END;
 $$ LANGUAGE plpgsql;
 

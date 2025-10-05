@@ -214,6 +214,53 @@ JSON만 반환하고 다른 설명은 추가하지 마세요.`
       // 브리핑 실패해도 재난 접수는 성공으로 처리
     }
 
+    // AI 작전 계획 생성
+    try {
+      const operationPlanMessage = await anthropic.messages.create({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 800,
+        messages: [
+          {
+            role: 'user',
+            content: `다음 재난 상황에 대한 구조 작전 계획을 수립해주세요:
+
+**재난 정보:**
+- 유형: ${analysisResult.disaster_type}
+- 위치: ${analysisResult.address}
+- 층수: ${analysisResult.floor || '정보 없음'}
+- 구조대상자: ${analysisResult.trapped_people ? '있음 (긴급)' : '없음'}
+- 상황: ${analysisResult.description}
+
+**작전 계획 작성 지침:**
+1. **우선 조치사항** (3개 이내)
+2. **추천 진입 경로** (가장 안전한 경로)
+3. **위험 요소 및 대응** (예상되는 위험과 대처법)
+4. **필요 장비** (필수 장비 목록)
+5. **구조 순서** (단계별 작전 수행 순서)
+
+간결하고 실행 가능한 계획을 작성하세요. 각 항목은 2-3개의 짧은 문장으로 작성하세요.`
+          }
+        ]
+      })
+
+      const operationPlanText = operationPlanMessage.content[0].type === 'text'
+        ? operationPlanMessage.content[0].text
+        : '작전 계획 생성 실패'
+
+      await supabase
+        .from('ai_briefings')
+        .insert({
+          disaster_id: data.id,
+          briefing_text: operationPlanText,
+          briefing_type: 'operation_plan'
+        })
+
+      console.log('AI operation plan created')
+    } catch (operationPlanError) {
+      console.error('Failed to create AI operation plan:', operationPlanError)
+      // 작전 계획 실패해도 재난 접수는 성공으로 처리
+    }
+
     return NextResponse.json({
       success: true,
       disaster: data,

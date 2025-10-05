@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { supabase } from '@/lib/supabase/client'
 
 interface ThermalVideoModalProps {
   isOpen: boolean
@@ -9,16 +10,58 @@ interface ThermalVideoModalProps {
   unitType: string
 }
 
+interface Detection {
+  id: number
+  type: 'trapped_person' | 'fire'
+  position: { x: number; y: number }
+  temp: number
+  confidence: number
+}
+
 export default function ThermalVideoModal({
   isOpen,
   onClose,
   unitId,
   unitType
 }: ThermalVideoModalProps) {
-  const [detections, setDetections] = useState([
-    { id: 1, type: 'trapped_person', position: { x: 45, y: 30 }, temp: 36.5 },
-    { id: 2, type: 'fire', position: { x: 70, y: 50 }, temp: 450 },
+  const [detections, setDetections] = useState<Detection[]>([
+    { id: 1, type: 'trapped_person', position: { x: 45, y: 30 }, temp: 36.5, confidence: 0.92 },
+    { id: 2, type: 'fire', position: { x: 70, y: 50 }, temp: 450, confidence: 0.88 },
   ])
+  const [isRecording, setIsRecording] = useState(true)
+  const [recordingTime, setRecordingTime] = useState(0)
+
+  // 녹화 시간 시뮬레이션
+  useEffect(() => {
+    if (!isOpen || !isRecording) return
+
+    const interval = setInterval(() => {
+      setRecordingTime(prev => prev + 1)
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [isOpen, isRecording])
+
+  // 감지 시뮬레이션 (5초마다 새로운 감지)
+  useEffect(() => {
+    if (!isOpen) return
+
+    const interval = setInterval(() => {
+      const randomDetection: Detection = {
+        id: Date.now(),
+        type: Math.random() > 0.5 ? 'fire' : 'trapped_person',
+        position: {
+          x: Math.random() * 80 + 10,
+          y: Math.random() * 60 + 20
+        },
+        temp: Math.random() > 0.5 ? Math.random() * 100 + 350 : Math.random() * 5 + 35,
+        confidence: Math.random() * 0.2 + 0.8
+      }
+      setDetections(prev => [...prev, randomDetection])
+    }, 5000)
+
+    return () => clearInterval(interval)
+  }, [isOpen])
 
   if (!isOpen) return null
 
@@ -38,10 +81,29 @@ export default function ThermalVideoModal({
         </div>
 
         {/* 열화상 영상 영역 (시뮬레이션) */}
-        <div className="relative bg-gradient-to-br from-purple-900 via-red-800 to-yellow-600 rounded-lg aspect-video mb-4">
+        <div className="relative bg-gradient-to-br from-purple-900 via-red-800 to-yellow-600 rounded-lg aspect-video mb-4 overflow-hidden">
+          {/* 실시간 스트리밍 인디케이터 */}
+          <div className="absolute top-2 left-2 flex items-center gap-2 z-10">
+            <div className={`w-3 h-3 rounded-full ${isRecording ? 'bg-red-500 animate-pulse' : 'bg-gray-500'}`}></div>
+            <span className="text-white text-xs font-semibold bg-black bg-opacity-50 px-2 py-1 rounded">
+              {isRecording ? 'LIVE' : 'PAUSED'} • {Math.floor(recordingTime / 60)}:{(recordingTime % 60).toString().padStart(2, '0')}
+            </span>
+          </div>
+
+          {/* 온도 스케일 */}
+          <div className="absolute top-2 right-2 bg-black bg-opacity-50 rounded px-2 py-1 text-white text-xs z-10">
+            <div className="text-center mb-1">온도 (°C)</div>
+            <div className="flex flex-col items-end gap-0.5">
+              <span className="text-yellow-300">500+</span>
+              <span className="text-orange-400">300</span>
+              <span className="text-red-500">100</span>
+              <span className="text-blue-300">0</span>
+            </div>
+          </div>
+
           {/* 가상 열화상 이미지 */}
-          <div className="absolute inset-0 flex items-center justify-center text-white opacity-30">
-            <p className="text-sm">열화상 영상 시뮬레이션</p>
+          <div className="absolute inset-0 flex items-center justify-center text-white opacity-20">
+            <p className="text-sm">실시간 열화상 영상</p>
           </div>
 
           {/* 감지된 객체 표시 */}
@@ -61,10 +123,10 @@ export default function ThermalVideoModal({
                   ? 'border-green-400 bg-green-400 bg-opacity-30'
                   : 'border-red-400 bg-red-400 bg-opacity-30'}
               `}>
-                <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded">
-                  {detection.type === 'trapped_person' ? '요구조자' : '화점'}
+                <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 whitespace-nowrap bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded">
+                  {detection.type === 'trapped_person' ? '구조대상자' : '화점'}
                   <br />
-                  {detection.temp}°C
+                  {detection.temp.toFixed(1)}°C • {(detection.confidence * 100).toFixed(0)}%
                 </div>
               </div>
             </div>
@@ -87,15 +149,15 @@ export default function ThermalVideoModal({
                   `} />
                   <div>
                     <p className="font-medium text-sm">
-                      {detection.type === 'trapped_person' ? '요구조자 발견' : '화점 감지'}
+                      {detection.type === 'trapped_person' ? '구조대상자 발견' : '화점 감지'}
                     </p>
                     <p className="text-xs text-gray-500">
-                      위치: ({detection.position.x}%, {detection.position.y}%)
+                      위치: ({detection.position.x.toFixed(0)}%, {detection.position.y.toFixed(0)}%) • 신뢰도: {(detection.confidence * 100).toFixed(0)}%
                     </p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="font-bold text-sm">{detection.temp}°C</p>
+                  <p className="font-bold text-sm">{detection.temp.toFixed(1)}°C</p>
                   <p className="text-xs text-gray-500">
                     {detection.type === 'trapped_person' ? '정상 체온' : '고온 감지'}
                   </p>
@@ -107,11 +169,31 @@ export default function ThermalVideoModal({
 
         {/* 액션 버튼 */}
         <div className="mt-4 flex gap-2">
-          <button className="flex-1 bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
-            위치 지도에 표시
+          <button
+            onClick={async () => {
+              // 구조대상자 위치를 hazard_overlays에 저장
+              const trappedPersonDetections = detections.filter(d => d.type === 'trapped_person')
+
+              for (const detection of trappedPersonDetections) {
+                await supabase.from('hazard_overlays').insert({
+                  disaster_id: unitId, // 실제로는 disaster_id를 받아와야 함
+                  hazard_type: 'trapped_person',
+                  severity: 'high',
+                  description: `AI 열화상 감지 (신뢰도: ${(detection.confidence * 100).toFixed(0)}%)`
+                })
+              }
+
+              alert(`${trappedPersonDetections.length}개의 위치를 지도에 표시했습니다.`)
+            }}
+            className="flex-1 bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+          >
+            위치 지도에 표시 ({detections.filter(d => d.type === 'trapped_person').length})
           </button>
-          <button className="flex-1 bg-gray-600 text-white py-2 rounded hover:bg-gray-700">
-            보고서 생성
+          <button
+            onClick={() => setIsRecording(!isRecording)}
+            className="flex-1 bg-gray-600 text-white py-2 rounded hover:bg-gray-700 transition"
+          >
+            {isRecording ? '녹화 일시정지' : '녹화 재개'}
           </button>
         </div>
       </div>

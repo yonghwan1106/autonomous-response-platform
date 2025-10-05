@@ -52,13 +52,15 @@ export async function POST(request: NextRequest) {
         lng: baseWithDistance.location.coordinates[0]
       }
 
-      // 경로 계산 (카카오 길찾기 API - 선택사항)
-      let route = null
-      try {
-        route = await calculateRoute(baseLocation, disasterLocation)
-      } catch (err) {
-        console.log('Route calculation failed, using straight line')
-      }
+      // 간단한 경로 생성 (직선 경로를 3개 포인트로 나눔)
+      const route = [
+        { lat: baseLocation.lat, lng: baseLocation.lng },
+        {
+          lat: (baseLocation.lat + disasterLocation.lat) / 2,
+          lng: (baseLocation.lng + disasterLocation.lng) / 2
+        },
+        { lat: disasterLocation.lat, lng: disasterLocation.lng }
+      ]
 
       // 모선 차량 생성
       const { data: mothership, error: mothershipError } = await supabase
@@ -69,11 +71,7 @@ export async function POST(request: NextRequest) {
           unit_type: 'mothership',
           status: 'deployed',
           current_location: `POINT(${baseLocation.lng} ${baseLocation.lat})`,
-          route: route || {
-            start: baseLocation,
-            end: disasterLocation,
-            waypoints: [baseLocation, disasterLocation]
-          }
+          route: route
         })
         .select()
         .single()
@@ -86,21 +84,47 @@ export async function POST(request: NextRequest) {
         )
       }
 
-      // 드론과 로봇 생성 (모선에서 출발)
+      // 드론 경로 (약간 다른 경로)
+      const droneRoute = [
+        { lat: baseLocation.lat, lng: baseLocation.lng },
+        {
+          lat: baseLocation.lat + (disasterLocation.lat - baseLocation.lat) * 0.3,
+          lng: baseLocation.lng + (disasterLocation.lng - baseLocation.lng) * 0.4
+        },
+        {
+          lat: baseLocation.lat + (disasterLocation.lat - baseLocation.lat) * 0.7,
+          lng: baseLocation.lng + (disasterLocation.lng - baseLocation.lng) * 0.8
+        },
+        { lat: disasterLocation.lat, lng: disasterLocation.lng }
+      ]
+
+      // 로봇 경로 (또 다른 경로)
+      const robotRoute = [
+        { lat: baseLocation.lat, lng: baseLocation.lng },
+        {
+          lat: baseLocation.lat + (disasterLocation.lat - baseLocation.lat) * 0.5,
+          lng: baseLocation.lng + (disasterLocation.lng - baseLocation.lng) * 0.3
+        },
+        { lat: disasterLocation.lat, lng: disasterLocation.lng }
+      ]
+
+      // 드론과 로봇 생성 (모선에서 출발) - deployed 상태로 변경
       const unitsToCreate = [
         {
           disaster_id: disasterId,
           base_id: baseWithDistance.id,
           unit_type: 'drone',
-          status: 'standby',
-          current_location: `POINT(${baseLocation.lng} ${baseLocation.lat})`
+          status: 'deployed',
+          current_location: `POINT(${baseLocation.lng} ${baseLocation.lat})`,
+          route: droneRoute
         },
         {
           disaster_id: disasterId,
           base_id: baseWithDistance.id,
           unit_type: 'robot',
-          status: 'standby',
-          current_location: `POINT(${baseLocation.lng} ${baseLocation.lat})`
+          status: 'deployed',
+          current_location: `POINT(${baseLocation.lng} ${baseLocation.lat})`,
+          route: robotRoute
         }
       ]
 

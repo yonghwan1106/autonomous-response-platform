@@ -13,11 +13,12 @@ export default function Home() {
   const loadActiveDisasters = async () => {
     const { data, error } = await supabase.rpc('get_active_disasters')
 
-    if (!error && data) {
-      console.log('Loaded active disasters:', data)
-      setActiveDisasters(data)
-    } else if (error) {
+    if (error) {
       console.error('Error loading disasters:', error)
+      setActiveDisasters([])
+    } else {
+      console.log('Loaded active disasters:', data)
+      setActiveDisasters(data || [])
     }
   }
 
@@ -46,7 +47,7 @@ export default function Home() {
   const handleDisasterSuccess = async (disaster: any) => {
     // Realtime 구독이 자동으로 업데이트하므로 수동 업데이트 불필요
     // 선발대 자동 출동
-    if (disaster.location) {
+    if (disaster.location?.coordinates && Array.isArray(disaster.location.coordinates)) {
       const [lng, lat] = disaster.location.coordinates
       await fetch('/api/dispatch', {
         method: 'POST',
@@ -63,8 +64,24 @@ export default function Home() {
     <main className="min-h-screen bg-gray-50">
       <div className="container mx-auto p-4">
         <header className="bg-emergency-red text-white py-4 px-6 rounded-lg shadow-lg mb-6">
-          <h1 className="text-3xl font-bold">자율주행 선발대 관제 플랫폼</h1>
-          <p className="text-sm mt-2">골든타임 확보를 위한 실시간 재난 관제 시스템</p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold">자율주행 선발대 관제 플랫폼</h1>
+              <p className="text-sm mt-2">골든타임 확보를 위한 실시간 재난 관제 시스템</p>
+            </div>
+            <div className="flex items-center gap-4">
+              <a
+                href="/about"
+                className="bg-white text-emergency-red px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-100 transition"
+              >
+                프로젝트 소개
+              </a>
+              <div className="text-right">
+                <p className="text-xs opacity-90">자율주행 일상 서비스 아이디어</p>
+                <p className="text-xs opacity-90">국민제안 공모전 출품작</p>
+              </div>
+            </div>
+          </div>
         </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -80,6 +97,25 @@ export default function Home() {
             <div className="bg-white rounded-lg shadow-md p-4">
               <h2 className="text-xl font-semibold mb-4">신규 재난 접수</h2>
               <DisasterReportForm onSuccess={handleDisasterSuccess} />
+
+              {/* 테스트 버튼 */}
+              <div className="mt-4 p-3 bg-gray-50 rounded border border-gray-200">
+                <p className="text-xs text-gray-600 mb-2 font-semibold">테스트 기능</p>
+                <button
+                  onClick={async () => {
+                    const res = await fetch('/api/test-data', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ type: 'route' })
+                    })
+                    const data = await res.json()
+                    alert(data.message || data.error)
+                  }}
+                  className="w-full bg-purple-600 text-white text-xs py-2 rounded hover:bg-purple-700 transition"
+                >
+                  경로 시각화 테스트
+                </button>
+              </div>
             </div>
 
             {/* AI 브리핑 */}
