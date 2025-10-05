@@ -70,8 +70,19 @@ JSON만 반환하고 다른 설명은 추가하지 마세요.`
     console.log('Claude analysis complete')
 
     // Claude 응답에서 JSON 추출
-    const responseText = message.content[0].type === 'text' ? message.content[0].text : '{}'
+    let responseText = message.content[0].type === 'text' ? message.content[0].text : '{}'
     console.log('Claude response:', responseText)
+
+    // Claude가 ```json 코드 블록으로 감싼 경우 제거
+    responseText = responseText.trim()
+    if (responseText.startsWith('```json')) {
+      responseText = responseText.replace(/^```json\s*\n/, '').replace(/\n```$/, '')
+    } else if (responseText.startsWith('```')) {
+      responseText = responseText.replace(/^```\s*\n/, '').replace(/\n```$/, '')
+    }
+    responseText = responseText.trim()
+
+    console.log('Cleaned response:', responseText)
 
     let analysisResult
     try {
