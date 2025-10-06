@@ -106,25 +106,6 @@ export default function Home() {
             <div className="bg-white rounded-lg shadow-md p-4">
               <h2 className="text-xl font-semibold mb-4">신규 재난 접수</h2>
               <DisasterReportForm onSuccess={handleDisasterSuccess} />
-
-              {/* 테스트 버튼 */}
-              <div className="mt-4 p-3 bg-gray-50 rounded border border-gray-200">
-                <p className="text-xs text-gray-600 mb-2 font-semibold">테스트 기능</p>
-                <button
-                  onClick={async () => {
-                    const res = await fetch('/api/test-data', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ type: 'route' })
-                    })
-                    const data = await res.json()
-                    alert(data.message || data.error)
-                  }}
-                  className="w-full bg-purple-600 text-white text-xs py-2 rounded hover:bg-purple-700 transition"
-                >
-                  경로 시각화 테스트
-                </button>
-              </div>
             </div>
 
             {/* AI 브리핑 */}
