@@ -11,7 +11,12 @@
       "Bash(netstat:*)",
       "Bash(findstr:*)",
       "Bash(taskkill:*)",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "Bash(echo:*)",
+      "WebSearch",
+      "WebFetch(domain:www.data.go.kr)",
+      "Bash(cat:*)",
+      "Bash(npx tsx:*)"
     ],
     "deny": [],
     "ask": []

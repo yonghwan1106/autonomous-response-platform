@@ -1,4 +1,4 @@
--- 가장 가까운 선발대 기지를 찾는 함수
+-- 가장 가까운 선발대 기지를 찾는 함수 (GeoJSON 형식으로 반환)
 CREATE OR REPLACE FUNCTION find_nearest_base(
   disaster_lat FLOAT,
   disaster_lng FLOAT
@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION find_nearest_base(
 RETURNS TABLE (
   id UUID,
   name TEXT,
-  location GEOGRAPHY,
+  location JSON,
   available BOOLEAN,
   distance FLOAT
 ) AS $$
@@ -15,7 +15,17 @@ BEGIN
   SELECT
     rb.id,
     rb.name,
-    rb.location,
+    CASE
+      WHEN rb.location IS NOT NULL THEN
+        json_build_object(
+          'type', 'Point',
+          'coordinates', json_build_array(
+            ST_X(rb.location::geometry),
+            ST_Y(rb.location::geometry)
+          )
+        )
+      ELSE NULL
+    END AS location,
     rb.available,
     ST_Distance(
       rb.location,

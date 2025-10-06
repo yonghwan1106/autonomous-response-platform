@@ -241,9 +241,16 @@ export default function ControlMap() {
 
     // 선발대 유닛 마커 및 경로 추가
     units.forEach(unit => {
-      if (!unit.current_location?.coordinates) return
+      console.log('🚁 Processing unit:', unit.unit_type, unit.id)
+
+      if (!unit.current_location?.coordinates) {
+        console.log('❌ No coordinates for unit:', unit.id)
+        return
+      }
 
       const [lng, lat] = unit.current_location.coordinates
+      console.log(`📍 Unit ${unit.unit_type} position:`, { lat, lng })
+
       const position = new window.kakao.maps.LatLng(lat, lng)
 
       const marker = new window.kakao.maps.Marker({
@@ -251,6 +258,8 @@ export default function ControlMap() {
         map: mapInstance.current,
         title: unit.unit_type
       })
+
+      console.log(`✅ Marker created for ${unit.unit_type}:`, marker)
 
       // 유닛 타입별 아이콘
       let imageSrc = ''
@@ -384,10 +393,14 @@ export default function ControlMap() {
     const { data, error } = await supabase.rpc('get_active_units')
 
     if (error) {
-      console.error('Error loading units:', error)
+      console.error('❌ Error loading units:', error)
       setUnits([])
     } else {
-      console.log('Loaded units with GeoJSON location:', data)
+      console.log('✅ Loaded units:', data)
+      console.log('📊 Units count:', data?.length || 0)
+      if (data && data.length > 0) {
+        console.log('🚗 First unit sample:', data[0])
+      }
       setUnits(data || [])
     }
   }

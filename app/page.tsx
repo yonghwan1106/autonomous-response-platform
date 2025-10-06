@@ -69,17 +69,25 @@ export default function Home() {
               <h1 className="text-3xl font-bold">자율주행 선발대 관제 플랫폼</h1>
               <p className="text-sm mt-2">골든타임 확보를 위한 실시간 재난 관제 시스템</p>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
+              <a
+                href="/"
+                className="bg-white text-emergency-red px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-100 transition"
+              >
+                관제 화면
+              </a>
+              <a
+                href="/guide"
+                className="bg-white text-emergency-red px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-100 transition"
+              >
+                사용 가이드
+              </a>
               <a
                 href="/about"
                 className="bg-white text-emergency-red px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-100 transition"
               >
                 프로젝트 소개
               </a>
-              <div className="text-right">
-                <p className="text-xs opacity-90">자율주행 일상 서비스 아이디어</p>
-                <p className="text-xs opacity-90">국민제안 공모전 출품작</p>
-              </div>
             </div>
           </div>
         </header>
