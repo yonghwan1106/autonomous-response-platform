@@ -14,24 +14,21 @@ export default function AboutPage() {
               <p className="text-sm opacity-90">골든타임 확보를 위한 자율주행 선발대 시스템</p>
             </div>
             <div className="flex items-center gap-3">
-              <a
+              <Link
                 href="/"
                 className="bg-white text-emergency-red px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-100 transition"
               >
                 관제 화면
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/guide"
                 className="bg-white text-emergency-red px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-100 transition"
               >
                 사용 가이드
-              </a>
-              <a
-                href="/about"
-                className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold cursor-default"
-              >
+              </Link>
+              <span className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold cursor-default">
                 프로젝트 소개
-              </a>
+              </span>
             </div>
           </div>
         </header>

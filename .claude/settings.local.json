@@ -16,7 +16,8 @@
       "WebSearch",
       "WebFetch(domain:www.data.go.kr)",
       "Bash(cat:*)",
-      "Bash(npx tsx:*)"
+      "Bash(npx tsx:*)",
+      "Bash(git log:*)"
     ],
     "deny": [],
     "ask": []

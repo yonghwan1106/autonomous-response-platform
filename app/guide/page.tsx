@@ -1,5 +1,7 @@
 'use client'
 
+import Link from 'next/link'
+
 export default function GuidePage() {
   return (
     <div className="min-h-screen bg-gray-50">
@@ -12,24 +14,21 @@ export default function GuidePage() {
               <p className="text-red-100">자율주행 선발대 관제 플랫폼 사용법</p>
             </div>
             <div className="flex items-center gap-3">
-              <a
+              <Link
                 href="/"
                 className="bg-white text-emergency-red px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-100 transition"
               >
                 관제 화면
-              </a>
-              <a
-                href="/guide"
-                className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold cursor-default"
-              >
+              </Link>
+              <span className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold cursor-default">
                 사용 가이드
-              </a>
-              <a
+              </span>
+              <Link
                 href="/about"
                 className="bg-white text-emergency-red px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-100 transition"
               >
                 프로젝트 소개
-              </a>
+              </Link>
             </div>
           </div>
         </header>

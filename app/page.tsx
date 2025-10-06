@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { supabase } from '@/lib/supabase/client'
 import ControlMap from '@/components/ControlMap'
 import DisasterReportForm from '@/components/DisasterReportForm'
@@ -70,24 +71,24 @@ export default function Home() {
               <p className="text-sm mt-2">골든타임 확보를 위한 실시간 재난 관제 시스템</p>
             </div>
             <div className="flex items-center gap-3">
-              <a
+              <Link
                 href="/"
                 className="bg-white text-emergency-red px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-100 transition"
               >
                 관제 화면
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/guide"
                 className="bg-white text-emergency-red px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-100 transition"
               >
                 사용 가이드
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/about"
                 className="bg-white text-emergency-red px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-100 transition"
               >
                 프로젝트 소개
-              </a>
+              </Link>
             </div>
           </div>
         </header>
