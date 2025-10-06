@@ -4,14 +4,14 @@ import Link from 'next/link'
 
 export default function GuidePage() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto p-6 max-w-4xl">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+      <div className="container mx-auto px-4 py-8">
         {/* 헤더 */}
         <header className="bg-emergency-red text-white py-6 px-8 rounded-lg shadow-lg mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold mb-2">사용 가이드</h1>
-              <p className="text-red-100">자율주행 선발대 관제 플랫폼 사용법</p>
+              <h1 className="text-4xl font-bold mb-2">사용 가이드</h1>
+              <p className="text-sm opacity-90">자율주행 선발대 관제 플랫폼 사용법</p>
             </div>
             <div className="flex items-center gap-3">
               <Link
@@ -34,21 +34,21 @@ export default function GuidePage() {
         </header>
 
         {/* 목차 */}
-        <nav className="bg-white p-6 rounded-lg shadow-md mb-8">
-          <h2 className="text-xl font-bold mb-4 text-gray-800">목차</h2>
-          <ul className="space-y-2 text-blue-600">
-            <li><a href="#overview" className="hover:underline">1. 프로젝트 개요</a></li>
-            <li><a href="#features" className="hover:underline">2. 주요 기능</a></li>
-            <li><a href="#disaster-report" className="hover:underline">3. 재난 신고하기</a></li>
-            <li><a href="#monitoring" className="hover:underline">4. 실시간 모니터링</a></li>
-            <li><a href="#ai-briefing" className="hover:underline">5. AI 상황 브리핑</a></li>
-            <li><a href="#tech-stack" className="hover:underline">6. 기술 스택</a></li>
+        <nav className="bg-white rounded-lg shadow-md p-8 mb-8">
+          <h2 className="text-2xl font-bold mb-6 text-gray-800">목차</h2>
+          <ul className="space-y-3 text-blue-600">
+            <li><a href="#overview" className="hover:underline text-lg">1. 프로젝트 개요</a></li>
+            <li><a href="#features" className="hover:underline text-lg">2. 주요 기능</a></li>
+            <li><a href="#disaster-report" className="hover:underline text-lg">3. 재난 신고하기</a></li>
+            <li><a href="#monitoring" className="hover:underline text-lg">4. 실시간 모니터링</a></li>
+            <li><a href="#ai-briefing" className="hover:underline text-lg">5. AI 상황 브리핑</a></li>
+            <li><a href="#tech-stack" className="hover:underline text-lg">6. 기술 스택</a></li>
           </ul>
         </nav>
 
         {/* 1. 프로젝트 개요 */}
-        <section id="overview" className="bg-white p-8 rounded-lg shadow-md mb-8">
-          <h2 className="text-2xl font-bold mb-4 text-gray-800">1. 프로젝트 개요</h2>
+        <section id="overview" className="bg-white rounded-lg shadow-md p-8 mb-8">
+          <h2 className="text-3xl font-bold mb-6 text-gray-800">1. 프로젝트 개요</h2>
           <p className="text-gray-700 mb-4 leading-relaxed">
             <strong>자율주행 선발대 관제 플랫폼</strong>은 재난 현장에 자율주행 모선(mothership), 드론(drone), 로봇(robot)을
             자동으로 출동시켜 실시간으로 관제하는 웹 기반 시스템입니다.
@@ -62,8 +62,8 @@ export default function GuidePage() {
         </section>
 
         {/* 2. 주요 기능 */}
-        <section id="features" className="bg-white p-8 rounded-lg shadow-md mb-8">
-          <h2 className="text-2xl font-bold mb-4 text-gray-800">2. 주요 기능</h2>
+        <section id="features" className="bg-white rounded-lg shadow-md p-8 mb-8">
+          <h2 className="text-3xl font-bold mb-6 text-gray-800">2. 주요 기능</h2>
           <div className="grid gap-4">
             <div className="border-l-4 border-red-500 pl-4 py-2">
               <h3 className="font-bold text-lg mb-2">🚨 자연어 재난 신고</h3>
@@ -105,8 +105,8 @@ export default function GuidePage() {
         </section>
 
         {/* 3. 재난 신고하기 */}
-        <section id="disaster-report" className="bg-white p-8 rounded-lg shadow-md mb-8">
-          <h2 className="text-2xl font-bold mb-4 text-gray-800">3. 재난 신고하기</h2>
+        <section id="disaster-report" className="bg-white rounded-lg shadow-md p-8 mb-8">
+          <h2 className="text-3xl font-bold mb-6 text-gray-800">3. 재난 신고하기</h2>
 
           <div className="space-y-4">
             <div>
@@ -143,8 +143,8 @@ export default function GuidePage() {
         </section>
 
         {/* 4. 실시간 모니터링 */}
-        <section id="monitoring" className="bg-white p-8 rounded-lg shadow-md mb-8">
-          <h2 className="text-2xl font-bold mb-4 text-gray-800">4. 실시간 모니터링</h2>
+        <section id="monitoring" className="bg-white rounded-lg shadow-md p-8 mb-8">
+          <h2 className="text-3xl font-bold mb-6 text-gray-800">4. 실시간 모니터링</h2>
 
           <div className="space-y-4">
             <div>
@@ -176,8 +176,8 @@ export default function GuidePage() {
         </section>
 
         {/* 5. AI 상황 브리핑 */}
-        <section id="ai-briefing" className="bg-white p-8 rounded-lg shadow-md mb-8">
-          <h2 className="text-2xl font-bold mb-4 text-gray-800">5. AI 상황 브리핑</h2>
+        <section id="ai-briefing" className="bg-white rounded-lg shadow-md p-8 mb-8">
+          <h2 className="text-3xl font-bold mb-6 text-gray-800">5. AI 상황 브리핑</h2>
 
           <div className="space-y-4">
             <p className="text-gray-700">
@@ -205,8 +205,8 @@ export default function GuidePage() {
         </section>
 
         {/* 6. 기술 스택 */}
-        <section id="tech-stack" className="bg-white p-8 rounded-lg shadow-md mb-8">
-          <h2 className="text-2xl font-bold mb-4 text-gray-800">6. 기술 스택</h2>
+        <section id="tech-stack" className="bg-white rounded-lg shadow-md p-8 mb-8">
+          <h2 className="text-3xl font-bold mb-6 text-gray-800">6. 기술 스택</h2>
 
           <div className="grid md:grid-cols-2 gap-4">
             <div className="border rounded-lg p-4">
