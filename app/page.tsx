@@ -7,6 +7,7 @@ import ControlMap from '@/components/ControlMap'
 import DisasterReportForm from '@/components/DisasterReportForm'
 import AIBriefing from '@/components/AIBriefing'
 import SensorDataDashboard from '@/components/SensorDataDashboard'
+import DisasterTabs from '@/components/DisasterTabs'
 
 export default function Home() {
   const [activeDisasters, setActiveDisasters] = useState<any[]>([])
@@ -169,28 +170,15 @@ export default function Home() {
             {/* 센서 데이터 대시보드 */}
             <SensorDataDashboard disasterId={selectedDisasterId} />
 
+            {/* 활성 재난 현황 */}
+            <DisasterTabs
+              disasters={activeDisasters}
+              selectedId={selectedDisasterId}
+              onSelect={(id) => setSelectedDisasterId(id)}
+            />
+
             {/* AI 브리핑 */}
             <AIBriefing />
-
-            {/* 활성 재난 현황 */}
-            <div className="bg-white rounded-lg shadow-md p-4">
-              <h2 className="text-xl font-semibold mb-4">활성 재난 현황</h2>
-              <div className="space-y-2">
-                {activeDisasters.length === 0 ? (
-                  <p className="text-sm text-gray-500">현재 활성 재난이 없습니다.</p>
-                ) : (
-                  activeDisasters.map((disaster) => (
-                    <div key={disaster.id} className="border-l-4 border-emergency-red pl-3 py-2">
-                      <p className="font-semibold text-sm">{disaster.disaster_type}</p>
-                      <p className="text-xs text-gray-600">{disaster.address}</p>
-                      <p className="text-xs text-gray-500 mt-1">
-                        {new Date(disaster.created_at).toLocaleTimeString('ko-KR')}
-                      </p>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
           </div>
         </div>
       </div>
