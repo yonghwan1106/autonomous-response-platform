@@ -30,6 +30,9 @@ export default function SensorDataDashboard({ disasterId }: { disasterId: string
     // 센서 데이터 로드
     loadSensorData()
 
+    // 즉시 첫 센서 데이터 생성
+    simulateSensorData()
+
     // 센서 데이터 시뮬레이션 (5초마다)
     const interval = setInterval(() => {
       simulateSensorData()
