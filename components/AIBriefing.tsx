@@ -36,7 +36,6 @@ export default function AIBriefing() {
         'postgres_changes',
         { event: '*', schema: 'public', table: 'ai_briefings' },
         () => {
-          console.log('Briefing updated')
           loadBriefings()
         }
       )

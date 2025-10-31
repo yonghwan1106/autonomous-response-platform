@@ -38,8 +38,6 @@ export default function UnitPositionUpdater({ units, onUpdate }: UnitPositionUpd
           if (response.ok) {
             const data = await response.json()
             if (data.success) {
-              console.log(`Unit ${unit.id} updated:`, data.status, data.position)
-
               // 부모 컴포넌트에 업데이트 알림
               if (onUpdate) {
                 onUpdate()
