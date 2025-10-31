@@ -73,19 +73,19 @@ export default function Home() {
             <div className="flex items-center gap-3">
               <Link
                 href="/"
-                className="bg-white text-emergency-red px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-100 transition"
+                className="bg-white text-emergency-red px-4 py-2 rounded-lg text-sm font-semibold shadow-lg ring-2 ring-white"
               >
                 관제 화면
               </Link>
               <Link
                 href="/guide"
-                className="bg-white text-emergency-red px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-100 transition"
+                className="bg-white/80 text-emergency-red px-4 py-2 rounded-lg text-sm font-semibold hover:bg-white transition"
               >
                 사용 가이드
               </Link>
               <Link
                 href="/about"
-                className="bg-white text-emergency-red px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-100 transition"
+                className="bg-white/80 text-emergency-red px-4 py-2 rounded-lg text-sm font-semibold hover:bg-white transition"
               >
                 프로젝트 소개
               </Link>

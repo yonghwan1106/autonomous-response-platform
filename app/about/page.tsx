@@ -16,17 +16,17 @@ export default function AboutPage() {
             <div className="flex items-center gap-3">
               <Link
                 href="/"
-                className="bg-white text-emergency-red px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-100 transition"
+                className="bg-white/80 text-emergency-red px-4 py-2 rounded-lg text-sm font-semibold hover:bg-white transition"
               >
                 관제 화면
               </Link>
               <Link
                 href="/guide"
-                className="bg-white text-emergency-red px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-100 transition"
+                className="bg-white/80 text-emergency-red px-4 py-2 rounded-lg text-sm font-semibold hover:bg-white transition"
               >
                 사용 가이드
               </Link>
-              <span className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold cursor-default">
+              <span className="bg-white text-emergency-red px-4 py-2 rounded-lg text-sm font-semibold shadow-lg ring-2 ring-white cursor-default">
                 프로젝트 소개
               </span>
             </div>
