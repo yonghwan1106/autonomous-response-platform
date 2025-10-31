@@ -23,8 +23,9 @@ npm run lint            # Run ESLint
 Execute these SQL files in Supabase SQL Editor in order:
 1. `lib/supabase/schema.sql` - Creates tables with PostGIS extension
 2. `lib/supabase/functions.sql` - Creates `find_nearest_base()` function
+3. `lib/supabase/migrations/001_create_messages_table.sql` - Creates messages table for communication
 
-Enable Realtime in Supabase Dashboard > Database > Replication for: `disasters`, `response_units`, `sensor_data`, `hazard_overlays`, `ai_briefings`
+Enable Realtime in Supabase Dashboard > Database > Replication for: `disasters`, `response_units`, `sensor_data`, `hazard_overlays`, `ai_briefings`, `messages`
 
 ## Architecture
 
@@ -51,6 +52,7 @@ Enable Realtime in Supabase Dashboard > Database > Replication for: `disasters`,
 - **response_units**: Tracks mothership/drone/robot positions and routes (JSONB)
 - **sensor_data**: Stores thermal/LiDAR/gas sensor readings from units
 - **hazard_overlays**: Danger zones (fire, collapse risk, gas leaks) with `GEOGRAPHY(POLYGON)` areas
+- **messages**: Communication logs between control center and field units with disaster_id reference
 
 ### Supabase Integration
 - Client initialization: `lib/supabase/client.ts` (uses anon key with RLS policies)

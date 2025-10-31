@@ -8,6 +8,7 @@ import DisasterReportForm from '@/components/DisasterReportForm'
 import AIBriefing from '@/components/AIBriefing'
 import SensorDataDashboard from '@/components/SensorDataDashboard'
 import DisasterTabs from '@/components/DisasterTabs'
+import CommunicationPanel from '@/components/CommunicationPanel'
 
 export default function Home() {
   const [activeDisasters, setActiveDisasters] = useState<any[]>([])
@@ -176,6 +177,9 @@ export default function Home() {
               selectedId={selectedDisasterId}
               onSelect={(id) => setSelectedDisasterId(id)}
             />
+
+            {/* 관제센터 - 현장 유닛 통신 */}
+            <CommunicationPanel disasterId={selectedDisasterId} />
 
             {/* AI 브리핑 */}
             <AIBriefing />
