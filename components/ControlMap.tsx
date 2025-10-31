@@ -49,10 +49,12 @@ export default function ControlMap() {
   const mapInstance = useRef<any>(null)
   const markersRef = useRef<Map<string, any>>(new Map())
   const polylinesRef = useRef<Map<string, any>>(new Map())
+  const clustererRef = useRef<any>(null)
   const [disasters, setDisasters] = useState<Disaster[]>([])
   const [units, setUnits] = useState<ResponseUnit[]>([])
   const [hazards, setHazards] = useState<HazardOverlay[]>([])
   const [selectedUnit, setSelectedUnit] = useState<{ id: string; type: string } | null>(null)
+  const [clusteringEnabled, setClusteringEnabled] = useState(true)
 
   // 지도 초기화
   useEffect(() => {
@@ -63,10 +65,10 @@ export default function ControlMap() {
       console.log('API 키:', process.env.NEXT_PUBLIC_KAKAO_APP_KEY)
 
       if (!window.kakao || !window.kakao.maps) {
-        // 카카오맵 스크립트 로드
+        // 카카오맵 스크립트 로드 (clusterer 라이브러리 포함)
         const script = document.createElement('script')
         const appKey = process.env.NEXT_PUBLIC_KAKAO_APP_KEY || '5dbdb21a182d8d1276ec1b4320137d86'
-        script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${appKey}&autoload=false`
+        script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${appKey}&autoload=false&libraries=clusterer`
         script.type = 'text/javascript'
         script.async = false
 
@@ -178,6 +180,11 @@ export default function ControlMap() {
   useEffect(() => {
     if (!mapInstance.current || !window.kakao) return
 
+    // 기존 클러스터러 제거
+    if (clustererRef.current) {
+      clustererRef.current.clear()
+    }
+
     // 기존 마커 제거
     markersRef.current.forEach(marker => marker.setMap(null))
     markersRef.current.clear()
@@ -185,6 +192,9 @@ export default function ControlMap() {
     // 기존 경로 제거
     polylinesRef.current.forEach(polyline => polyline.setMap(null))
     polylinesRef.current.clear()
+
+    // 모든 마커를 배열에 모음
+    const allMarkers: any[] = []
 
     // 가장 최근 재난 위치로 지도 이동 (첫 번째 재난)
     if (disasters.length > 0) {
@@ -219,7 +229,7 @@ export default function ControlMap() {
 
       const marker = new window.kakao.maps.Marker({
         position,
-        map: mapInstance.current,
+        map: null, // 클러스터링을 위해 나중에 추가
         title: disaster.disaster_type || '재난'
       })
 
@@ -238,6 +248,7 @@ export default function ControlMap() {
       })
 
       markersRef.current.set(`disaster-${disaster.id}`, marker)
+      allMarkers.push(marker)
     })
 
     // 선발대 유닛 마커 및 경로 추가
@@ -256,7 +267,7 @@ export default function ControlMap() {
 
       const marker = new window.kakao.maps.Marker({
         position,
-        map: mapInstance.current,
+        map: null, // 클러스터링을 위해 나중에 추가
         title: unit.unit_type
       })
 
@@ -291,6 +302,7 @@ export default function ControlMap() {
       })
 
       markersRef.current.set(`unit-${unit.id}`, marker)
+      allMarkers.push(marker)
 
       // 경로 표시 (route 데이터가 있는 경우)
       if (unit.route && Array.isArray(unit.route) && unit.route.length > 0) {
@@ -325,7 +337,7 @@ export default function ControlMap() {
 
       const marker = new window.kakao.maps.Marker({
         position,
-        map: mapInstance.current,
+        map: null, // 클러스터링을 위해 나중에 추가
         title: hazard.hazard_type
       })
 
@@ -373,8 +385,63 @@ export default function ControlMap() {
       })
 
       markersRef.current.set(`hazard-${hazard.id}`, marker)
+      allMarkers.push(marker)
     })
-  }, [disasters, units, hazards])
+
+    // 클러스터링 적용 또는 개별 마커 표시
+    if (clusteringEnabled && allMarkers.length > 10 && window.kakao.maps.MarkerClusterer) {
+      // 마커가 10개 이상일 때 클러스터링 사용
+      console.log(`🎯 Clustering enabled for ${allMarkers.length} markers`)
+
+      clustererRef.current = new window.kakao.maps.MarkerClusterer({
+        map: mapInstance.current,
+        markers: allMarkers,
+        gridSize: 60, // 클러스터 그리드 크기
+        averageCenter: true, // 클러스터 중심을 마커들의 평균 위치로
+        minLevel: 5, // 클러스터 최소 표시 레벨
+        disableClickZoom: false, // 클러스터 클릭 시 줌 가능
+        calculator: [10, 30, 50], // 클러스터 크기별 스타일
+        styles: [
+          {
+            width: '40px',
+            height: '40px',
+            background: 'rgba(239, 68, 68, 0.8)',
+            borderRadius: '50%',
+            color: '#fff',
+            textAlign: 'center',
+            fontWeight: 'bold',
+            lineHeight: '40px'
+          },
+          {
+            width: '50px',
+            height: '50px',
+            background: 'rgba(239, 68, 68, 0.9)',
+            borderRadius: '50%',
+            color: '#fff',
+            textAlign: 'center',
+            fontWeight: 'bold',
+            lineHeight: '50px'
+          },
+          {
+            width: '60px',
+            height: '60px',
+            background: 'rgba(220, 38, 38, 1)',
+            borderRadius: '50%',
+            color: '#fff',
+            textAlign: 'center',
+            fontWeight: 'bold',
+            lineHeight: '60px'
+          }
+        ]
+      })
+    } else {
+      // 마커가 적거나 클러스터링 비활성화 시 개별 마커 표시
+      console.log(`📍 Displaying ${allMarkers.length} individual markers`)
+      allMarkers.forEach(marker => {
+        marker.setMap(mapInstance.current)
+      })
+    }
+  }, [disasters, units, hazards, clusteringEnabled])
 
   const loadDisasters = async () => {
     // RPC 함수를 사용하여 location을 GeoJSON 형식으로 가져오기
@@ -421,7 +488,22 @@ export default function ControlMap() {
 
   return (
     <>
-      <div ref={mapRef} className="w-full h-[600px] rounded-lg" />
+      <div className="relative">
+        <div ref={mapRef} className="w-full h-[600px] rounded-lg" />
+
+        {/* 클러스터링 토글 버튼 */}
+        <button
+          onClick={() => setClusteringEnabled(!clusteringEnabled)}
+          className={`absolute top-4 right-4 px-4 py-2 rounded-lg shadow-lg font-semibold text-sm transition-all ${
+            clusteringEnabled
+              ? 'bg-red-600 text-white hover:bg-red-700'
+              : 'bg-white text-gray-700 hover:bg-gray-100 border-2 border-gray-300'
+          }`}
+          title={clusteringEnabled ? '클러스터링 활성화됨' : '클러스터링 비활성화됨'}
+        >
+          {clusteringEnabled ? '🎯 클러스터링 ON' : '📍 클러스터링 OFF'}
+        </button>
+      </div>
 
       {/* 유닛 위치 자동 업데이트 */}
       <UnitPositionUpdater
