@@ -6,20 +6,31 @@ export async function POST(request: NextRequest) {
     const { unitId } = await request.json()
 
     if (!unitId) {
+      console.error('❌ No unitId provided')
       return NextResponse.json(
         { error: 'Unit ID is required' },
         { status: 400 }
       )
     }
 
-    // 유닛 정보 가져오기
-    const { data: unit, error: unitError } = await supabase
-      .from('response_units')
-      .select('*, disasters(location)')
-      .eq('id', unitId)
-      .single()
+    console.log('🔄 Updating position for unit:', unitId)
 
-    if (unitError || !unit) {
+    // 유닛 정보 가져오기 (RPC 사용하여 GeoJSON 형식으로)
+    const { data: units, error: unitError } = await supabase
+      .rpc('get_active_units')
+
+    if (unitError || !units) {
+      console.error('❌ Failed to fetch units:', unitError)
+      return NextResponse.json(
+        { error: 'Failed to fetch units' },
+        { status: 500 }
+      )
+    }
+
+    const unit = units.find((u: any) => u.id === unitId)
+
+    if (!unit) {
+      console.error('❌ Unit not found:', unitId)
       return NextResponse.json(
         { error: 'Unit not found' },
         { status: 404 }
@@ -42,27 +53,18 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    // 현재 위치 파싱
+    // 현재 위치 파싱 (GeoJSON 형식)
     const currentLocation = unit.current_location
-    let currentLng, currentLat
 
-    if (typeof currentLocation === 'string') {
-      const match = currentLocation.match(/POINT\(([\d.-]+)\s+([\d.-]+)\)/)
-      if (match) {
-        currentLng = parseFloat(match[1])
-        currentLat = parseFloat(match[2])
-      }
-    } else if (currentLocation?.coordinates) {
-      currentLng = currentLocation.coordinates[0]
-      currentLat = currentLocation.coordinates[1]
-    }
-
-    if (!currentLng || !currentLat) {
+    if (!currentLocation || !currentLocation.coordinates || currentLocation.coordinates.length !== 2) {
+      console.error('❌ Invalid current location:', currentLocation)
       return NextResponse.json(
-        { error: 'Invalid current location' },
+        { error: 'Invalid current location', currentLocation },
         { status: 400 }
       )
     }
+
+    const [currentLng, currentLat] = currentLocation.coordinates
 
     // 경로에서 다음 목표 지점 찾기
     const route = unit.route as Array<{ lat: number; lng: number }>

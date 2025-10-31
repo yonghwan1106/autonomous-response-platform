@@ -25,12 +25,19 @@ export default function SensorDataDashboard({ disasterId }: { disasterId: string
   }>({})
 
   useEffect(() => {
-    if (!disasterId) return
+    if (!disasterId) {
+      // disasterId가 없으면 데이터 초기화
+      setThermalData([])
+      setGasData([])
+      setLatestData({})
+      return
+    }
 
     // 센서 데이터 로드
     loadSensorData()
 
     // 즉시 첫 센서 데이터 생성
+    console.log('🌡️ Starting sensor simulation for disaster:', disasterId)
     simulateSensorData()
 
     // 센서 데이터 시뮬레이션 (5초마다)
@@ -119,19 +126,27 @@ export default function SensorDataDashboard({ disasterId }: { disasterId: string
   const simulateSensorData = async () => {
     if (!disasterId) return
 
+    console.log('🌡️ Simulating sensor data for disaster:', disasterId)
+
     // 열화상 센서 데이터 시뮬레이션
     const thermalData = {
       temperature: Math.round(200 + Math.random() * 300), // 200-500°C
       hotSpots: Math.floor(Math.random() * 5) + 1
     }
 
-    await supabase.from('sensor_data').insert({
+    const { error: thermalError } = await supabase.from('sensor_data').insert({
       disaster_id: disasterId,
       unit_id: 'simulated-drone',
       data_type: 'thermal',
       data: thermalData,
       confidence: 0.85 + Math.random() * 0.1
     })
+
+    if (thermalError) {
+      console.error('❌ Failed to insert thermal data:', thermalError)
+    } else {
+      console.log('✅ Thermal data inserted:', thermalData)
+    }
 
     // 가스 센서 데이터 시뮬레이션
     const gasData = {
@@ -140,13 +155,19 @@ export default function SensorDataDashboard({ disasterId }: { disasterId: string
       h2s: Math.round(5 + Math.random() * 15) // 5-20 ppm
     }
 
-    await supabase.from('sensor_data').insert({
+    const { error: gasError } = await supabase.from('sensor_data').insert({
       disaster_id: disasterId,
       unit_id: 'simulated-robot',
       data_type: 'gas',
       data: gasData,
       confidence: 0.9 + Math.random() * 0.05
     })
+
+    if (gasError) {
+      console.error('❌ Failed to insert gas data:', gasError)
+    } else {
+      console.log('✅ Gas data inserted:', gasData)
+    }
   }
 
   if (!disasterId) {
