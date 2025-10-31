@@ -165,15 +165,15 @@ export default function SensorDataDashboard({ disasterId }: { disasterId: string
 
   if (!disasterId) {
     return (
-      <div className="bg-white rounded-lg shadow-md p-4">
-        <h2 className="text-xl font-semibold mb-4">센서 데이터</h2>
+      <div>
+        <h2 className="text-xl font-semibold mb-4">실시간 센서 데이터</h2>
         <p className="text-sm text-gray-500">재난을 선택하면 센서 데이터가 표시됩니다.</p>
       </div>
     )
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 space-y-6">
+    <div className="space-y-6">
       <h2 className="text-xl font-semibold">실시간 센서 데이터</h2>
 
       {/* 현재 수치 */}

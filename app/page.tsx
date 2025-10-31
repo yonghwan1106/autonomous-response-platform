@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase/client'
 import ControlMap from '@/components/ControlMap'
@@ -10,9 +10,12 @@ import SensorDataDashboard from '@/components/SensorDataDashboard'
 import DisasterTabs from '@/components/DisasterTabs'
 import CommunicationPanel from '@/components/CommunicationPanel'
 
+type RightPanelTab = 'report' | 'disasters' | 'sensors' | 'communication' | 'briefing'
+
 export default function Home() {
   const [activeDisasters, setActiveDisasters] = useState<any[]>([])
   const [selectedDisasterId, setSelectedDisasterId] = useState<string | null>(null)
+  const [activeTab, setActiveTab] = useState<RightPanelTab>('disasters')
 
   // DB에서 활성 재난 데이터 로드 (RPC 함수 사용)
   const loadActiveDisasters = async () => {
@@ -53,7 +56,7 @@ export default function Home() {
     }
   }, [])
 
-  const handleDisasterSuccess = async (disaster: any) => {
+  const handleDisasterSuccess = useCallback(async (disaster: any) => {
     // Realtime 구독이 자동으로 업데이트하므로 수동 업데이트 불필요
     // 선발대 자동 출동
     if (disaster.location?.coordinates && Array.isArray(disaster.location.coordinates)) {
@@ -67,7 +70,7 @@ export default function Home() {
         })
       })
     }
-  }
+  }, [])
 
   return (
     <main className="min-h-screen bg-gray-50">
@@ -160,29 +163,91 @@ export default function Home() {
             </div>
           </div>
 
-          {/* 우측: 재난 정보 및 AI 브리핑 */}
-          <div className="space-y-6">
-            {/* 신규 재난 접수 */}
-            <div className="bg-white rounded-lg shadow-md p-4">
-              <h2 className="text-xl font-semibold mb-4">신규 재난 접수</h2>
-              <DisasterReportForm onSuccess={handleDisasterSuccess} />
+          {/* 우측: 탭 기반 패널 */}
+          <div className="bg-white rounded-lg shadow-md overflow-hidden">
+            {/* 탭 헤더 */}
+            <div className="flex border-b border-gray-200 bg-gray-50">
+              <button
+                onClick={() => setActiveTab('disasters')}
+                className={`flex-1 px-4 py-3 text-sm font-semibold transition-colors ${
+                  activeTab === 'disasters'
+                    ? 'bg-white text-emergency-red border-b-2 border-emergency-red'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                }`}
+              >
+                재난 현황
+              </button>
+              <button
+                onClick={() => setActiveTab('report')}
+                className={`flex-1 px-4 py-3 text-sm font-semibold transition-colors ${
+                  activeTab === 'report'
+                    ? 'bg-white text-emergency-red border-b-2 border-emergency-red'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                }`}
+              >
+                재난 접수
+              </button>
+              <button
+                onClick={() => setActiveTab('sensors')}
+                className={`flex-1 px-4 py-3 text-sm font-semibold transition-colors ${
+                  activeTab === 'sensors'
+                    ? 'bg-white text-emergency-red border-b-2 border-emergency-red'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                }`}
+              >
+                센서 데이터
+              </button>
+              <button
+                onClick={() => setActiveTab('communication')}
+                className={`flex-1 px-4 py-3 text-sm font-semibold transition-colors ${
+                  activeTab === 'communication'
+                    ? 'bg-white text-emergency-red border-b-2 border-emergency-red'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                }`}
+              >
+                통신
+              </button>
+              <button
+                onClick={() => setActiveTab('briefing')}
+                className={`flex-1 px-4 py-3 text-sm font-semibold transition-colors ${
+                  activeTab === 'briefing'
+                    ? 'bg-white text-emergency-red border-b-2 border-emergency-red'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                }`}
+              >
+                AI 브리핑
+              </button>
             </div>
 
-            {/* 센서 데이터 대시보드 */}
-            <SensorDataDashboard disasterId={selectedDisasterId} />
+            {/* 탭 컨텐츠 */}
+            <div className="p-4" style={{ maxHeight: 'calc(100vh - 200px)', overflowY: 'auto' }}>
+              {activeTab === 'disasters' && (
+                <DisasterTabs
+                  disasters={activeDisasters}
+                  selectedId={selectedDisasterId}
+                  onSelect={(id) => setSelectedDisasterId(id)}
+                />
+              )}
 
-            {/* 활성 재난 현황 */}
-            <DisasterTabs
-              disasters={activeDisasters}
-              selectedId={selectedDisasterId}
-              onSelect={(id) => setSelectedDisasterId(id)}
-            />
+              {activeTab === 'report' && (
+                <div>
+                  <h2 className="text-xl font-semibold mb-4">신규 재난 접수</h2>
+                  <DisasterReportForm onSuccess={handleDisasterSuccess} />
+                </div>
+              )}
 
-            {/* 관제센터 - 현장 유닛 통신 */}
-            <CommunicationPanel disasterId={selectedDisasterId} />
+              {activeTab === 'sensors' && (
+                <SensorDataDashboard disasterId={selectedDisasterId} />
+              )}
 
-            {/* AI 브리핑 */}
-            <AIBriefing />
+              {activeTab === 'communication' && (
+                <CommunicationPanel disasterId={selectedDisasterId} />
+              )}
+
+              {activeTab === 'briefing' && (
+                <AIBriefing />
+              )}
+            </div>
           </div>
         </div>
       </div>

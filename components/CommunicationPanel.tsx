@@ -119,15 +119,15 @@ export default function CommunicationPanel({ disasterId }: { disasterId: string 
 
   if (!disasterId) {
     return (
-      <div className="bg-white rounded-lg shadow-md p-4">
-        <h2 className="text-xl font-semibold mb-4">통신</h2>
+      <div>
+        <h2 className="text-xl font-semibold mb-4">관제센터 ↔ 현장 유닛</h2>
         <p className="text-sm text-gray-500">재난을 선택하면 통신 패널이 활성화됩니다.</p>
       </div>
     )
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 flex flex-col h-[500px]">
+    <div className="flex flex-col h-[600px]">
       <h2 className="text-xl font-semibold mb-4">관제센터 ↔ 현장 유닛</h2>
 
       {/* 빠른 알림 버튼 */}

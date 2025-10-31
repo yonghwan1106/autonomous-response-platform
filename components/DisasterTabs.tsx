@@ -20,7 +20,7 @@ interface DisasterTabsProps {
 export default function DisasterTabs({ disasters, selectedId, onSelect }: DisasterTabsProps) {
   if (disasters.length === 0) {
     return (
-      <div className="bg-white rounded-lg shadow-md p-4">
+      <div>
         <h2 className="text-xl font-semibold mb-4">활성 재난 현황</h2>
         <p className="text-sm text-gray-500">현재 활성 재난이 없습니다.</p>
       </div>
@@ -39,7 +39,7 @@ export default function DisasterTabs({ disasters, selectedId, onSelect }: Disast
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-4">
+    <div>
       <h2 className="text-xl font-semibold mb-4">활성 재난 현황 ({disasters.length})</h2>
 
       <div className="space-y-2 max-h-[400px] overflow-y-auto">
