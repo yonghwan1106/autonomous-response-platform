@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { supabase } from '@/lib/supabase/client'
 import ThermalVideoModal from './ThermalVideoModal'
+import UnitPositionUpdater from './UnitPositionUpdater'
 
 declare global {
   interface Window {
@@ -421,6 +422,14 @@ export default function ControlMap() {
   return (
     <>
       <div ref={mapRef} className="w-full h-[600px] rounded-lg" />
+
+      {/* 유닛 위치 자동 업데이트 */}
+      <UnitPositionUpdater
+        units={units}
+        onUpdate={() => {
+          loadUnits() // 위치 업데이트 후 유닛 데이터 다시 로드
+        }}
+      />
 
       {/* 열화상 영상 모달 */}
       <ThermalVideoModal
