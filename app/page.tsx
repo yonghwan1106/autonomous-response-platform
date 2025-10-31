@@ -73,30 +73,30 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-gray-50">
       <div className="container mx-auto p-4">
-        <header className="bg-emergency-red text-white py-4 px-6 rounded-lg shadow-lg mb-6">
-          <div className="flex items-center justify-between">
+        <header className="bg-emergency-red text-white py-4 px-4 md:px-6 rounded-lg shadow-lg mb-4 md:mb-6">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold">자율주행 선발대 관제 플랫폼</h1>
-              <p className="text-sm mt-2">골든타임 확보를 위한 실시간 재난 관제 시스템</p>
+              <h1 className="text-xl md:text-3xl font-bold">자율주행 선발대 관제 플랫폼</h1>
+              <p className="text-xs md:text-sm mt-1 md:mt-2">골든타임 확보를 위한 실시간 재난 관제 시스템</p>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 md:gap-3">
               <Link
                 href="/"
-                className="bg-white text-emergency-red px-4 py-2 rounded-lg text-sm font-semibold shadow-lg ring-2 ring-white"
+                className="bg-white text-emergency-red px-3 md:px-4 py-1.5 md:py-2 rounded-lg text-xs md:text-sm font-semibold shadow-lg ring-2 ring-white"
               >
-                관제 화면
+                관제
               </Link>
               <Link
                 href="/guide"
-                className="bg-white/80 text-emergency-red px-4 py-2 rounded-lg text-sm font-semibold hover:bg-white transition"
+                className="bg-white/80 text-emergency-red px-3 md:px-4 py-1.5 md:py-2 rounded-lg text-xs md:text-sm font-semibold hover:bg-white transition"
               >
-                사용 가이드
+                가이드
               </Link>
               <Link
                 href="/about"
-                className="bg-white/80 text-emergency-red px-4 py-2 rounded-lg text-sm font-semibold hover:bg-white transition"
+                className="bg-white/80 text-emergency-red px-3 md:px-4 py-1.5 md:py-2 rounded-lg text-xs md:text-sm font-semibold hover:bg-white transition"
               >
-                프로젝트 소개
+                소개
               </Link>
             </div>
           </div>
@@ -164,30 +164,30 @@ export default function Home() {
           {/* 우측: 탭 기반 패널 */}
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
             {/* 탭 헤더 */}
-            <div className="flex border-b border-gray-200 bg-gray-50">
+            <div className="flex border-b border-gray-200 bg-gray-50 overflow-x-auto">
               <button
                 onClick={() => setActiveTab('report')}
-                className={`flex-1 px-4 py-3 text-sm font-semibold transition-colors ${
+                className={`flex-1 px-2 md:px-4 py-2 md:py-3 text-xs md:text-sm font-semibold transition-colors whitespace-nowrap ${
                   activeTab === 'report'
                     ? 'bg-white text-emergency-red border-b-2 border-emergency-red'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                 }`}
               >
-                재난 접수
+                재난접수
               </button>
               <button
                 onClick={() => setActiveTab('sensors')}
-                className={`flex-1 px-4 py-3 text-sm font-semibold transition-colors ${
+                className={`flex-1 px-2 md:px-4 py-2 md:py-3 text-xs md:text-sm font-semibold transition-colors whitespace-nowrap ${
                   activeTab === 'sensors'
                     ? 'bg-white text-emergency-red border-b-2 border-emergency-red'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                 }`}
               >
-                센서 데이터
+                센서
               </button>
               <button
                 onClick={() => setActiveTab('communication')}
-                className={`flex-1 px-4 py-3 text-sm font-semibold transition-colors ${
+                className={`flex-1 px-2 md:px-4 py-2 md:py-3 text-xs md:text-sm font-semibold transition-colors whitespace-nowrap ${
                   activeTab === 'communication'
                     ? 'bg-white text-emergency-red border-b-2 border-emergency-red'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
@@ -197,13 +197,13 @@ export default function Home() {
               </button>
               <button
                 onClick={() => setActiveTab('briefing')}
-                className={`flex-1 px-4 py-3 text-sm font-semibold transition-colors ${
+                className={`flex-1 px-2 md:px-4 py-2 md:py-3 text-xs md:text-sm font-semibold transition-colors whitespace-nowrap ${
                   activeTab === 'briefing'
                     ? 'bg-white text-emergency-red border-b-2 border-emergency-red'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                 }`}
               >
-                AI 브리핑
+                AI브리핑
               </button>
             </div>
 
