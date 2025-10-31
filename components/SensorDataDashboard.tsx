@@ -23,6 +23,52 @@ export default function SensorDataDashboard({ disasterId }: { disasterId: string
     ch4?: number
     h2s?: number
   }>({})
+  const [riskScore, setRiskScore] = useState<number>(0)
+
+  // 위험도 계산 함수 (0-100)
+  const calculateRiskScore = (temp?: number, co?: number, ch4?: number, h2s?: number): number => {
+    let score = 0
+
+    // 온도 위험도 (40점 만점)
+    if (temp) {
+      if (temp > 500) score += 40
+      else if (temp > 400) score += 30
+      else if (temp > 300) score += 20
+      else if (temp > 200) score += 10
+    }
+
+    // CO 위험도 (25점 만점)
+    if (co) {
+      if (co > 150) score += 25
+      else if (co > 100) score += 18
+      else if (co > 50) score += 10
+    }
+
+    // CH4 위험도 (20점 만점)
+    if (ch4) {
+      if (ch4 > 100) score += 20
+      else if (ch4 > 70) score += 15
+      else if (ch4 > 40) score += 8
+    }
+
+    // H2S 위험도 (15점 만점)
+    if (h2s) {
+      if (h2s > 20) score += 15
+      else if (h2s > 15) score += 10
+      else if (h2s > 10) score += 5
+    }
+
+    return Math.min(score, 100)
+  }
+
+  // 위험도 레벨 및 색상 결정
+  const getRiskLevel = (score: number): { level: string; color: string; bgColor: string; textColor: string } => {
+    if (score >= 80) return { level: '매우 위험', color: 'bg-red-600', bgColor: 'bg-red-50', textColor: 'text-red-800' }
+    if (score >= 60) return { level: '위험', color: 'bg-orange-500', bgColor: 'bg-orange-50', textColor: 'text-orange-800' }
+    if (score >= 40) return { level: '경고', color: 'bg-yellow-500', bgColor: 'bg-yellow-50', textColor: 'text-yellow-800' }
+    if (score >= 20) return { level: '주의', color: 'bg-blue-500', bgColor: 'bg-blue-50', textColor: 'text-blue-800' }
+    return { level: '안전', color: 'bg-green-500', bgColor: 'bg-green-50', textColor: 'text-green-800' }
+  }
 
   useEffect(() => {
     if (!disasterId) {
@@ -108,18 +154,21 @@ export default function SensorDataDashboard({ disasterId }: { disasterId: string
     setGasData(gas.reverse().slice(-10))
 
     // 최신 데이터 업데이트
+    let newData = { ...latestData }
     if (thermal.length > 0) {
-      setLatestData(prev => ({ ...prev, temperature: thermal[thermal.length - 1].temperature }))
+      newData.temperature = thermal[thermal.length - 1].temperature
     }
     if (gas.length > 0) {
       const latest = gas[gas.length - 1]
-      setLatestData(prev => ({
-        ...prev,
-        co: latest.CO,
-        ch4: latest.CH4,
-        h2s: latest.H2S
-      }))
+      newData.co = latest.CO
+      newData.ch4 = latest.CH4
+      newData.h2s = latest.H2S
     }
+    setLatestData(newData)
+
+    // 위험도 점수 업데이트
+    const score = calculateRiskScore(newData.temperature, newData.co, newData.ch4, newData.h2s)
+    setRiskScore(score)
   }
 
   const simulateSensorData = async () => {
@@ -172,9 +221,43 @@ export default function SensorDataDashboard({ disasterId }: { disasterId: string
     )
   }
 
+  const riskLevel = getRiskLevel(riskScore)
+
   return (
     <div className="space-y-6">
       <h2 className="text-xl font-semibold">실시간 센서 데이터</h2>
+
+      {/* 위험도 분석 */}
+      <div className={`${riskLevel.bgColor} border-2 ${riskLevel.color.replace('bg-', 'border-')} rounded-lg p-4`}>
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="text-sm font-bold text-gray-800">🔍 AI 위험도 분석</h3>
+          <span className={`px-3 py-1 ${riskLevel.color} text-white text-xs font-bold rounded-full`}>
+            {riskLevel.level}
+          </span>
+        </div>
+        <div className="flex items-center gap-4">
+          <div className="flex-1">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-xs text-gray-600">위험도 점수</span>
+              <span className={`text-lg font-bold ${riskLevel.textColor}`}>{riskScore}/100</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+              <div
+                className={`h-full ${riskLevel.color} transition-all duration-500`}
+                style={{ width: `${riskScore}%` }}
+              ></div>
+            </div>
+          </div>
+        </div>
+        <div className="mt-3 text-xs text-gray-700">
+          <div className="grid grid-cols-2 gap-2">
+            <div>온도: <span className="font-semibold">{latestData.temperature ? `${latestData.temperature}°C` : 'N/A'}</span></div>
+            <div>CO: <span className="font-semibold">{latestData.co ? `${latestData.co}ppm` : 'N/A'}</span></div>
+            <div>CH4: <span className="font-semibold">{latestData.ch4 ? `${latestData.ch4}ppm` : 'N/A'}</span></div>
+            <div>H2S: <span className="font-semibold">{latestData.h2s ? `${latestData.h2s}ppm` : 'N/A'}</span></div>
+          </div>
+        </div>
+      </div>
 
       {/* 현재 수치 */}
       <div className="grid grid-cols-2 gap-4">
