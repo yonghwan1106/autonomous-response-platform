@@ -98,6 +98,11 @@ export default function Home() {
           <div className="lg:col-span-2 bg-white rounded-lg shadow-md p-4">
             <h2 className="text-xl font-semibold mb-4">통합 관제 지도</h2>
             <ControlMap />
+            <div className="mt-3 p-3 bg-yellow-50 border-l-4 border-yellow-400 rounded">
+              <p className="text-sm text-yellow-800">
+                ⚠️ 현재 개발 중이며, 지도 일부 마커 기능은 정확한 위치 표시를 못하고 있습니다.
+              </p>
+            </div>
           </div>
 
           {/* 우측: 재난 정보 및 AI 브리핑 */}

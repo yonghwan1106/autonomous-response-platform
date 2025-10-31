@@ -14,6 +14,9 @@ interface Briefing {
 // 간단한 마크다운 렌더링 함수
 function renderMarkdown(text: string): string {
   return text
+    .replace(/### (.+?)(\n|$)/g, '<h3 class="font-bold text-base mt-2 mb-1">$1</h3>') // ### 헤더
+    .replace(/## (.+?)(\n|$)/g, '<h2 class="font-bold text-lg mt-3 mb-2">$1</h2>') // ## 헤더
+    .replace(/# (.+?)(\n|$)/g, '<h1 class="font-bold text-xl mt-3 mb-2">$1</h1>') // # 헤더
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>') // **bold** -> <strong>bold</strong>
     .replace(/\*(.+?)\*/g, '<em>$1</em>') // *italic* -> <em>italic</em>
     .replace(/\n/g, '<br/>') // 줄바꿈
