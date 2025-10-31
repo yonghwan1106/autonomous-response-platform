@@ -25,7 +25,6 @@ export default function Home() {
       console.error('Error loading disasters:', error)
       setActiveDisasters([])
     } else {
-      console.log('Loaded active disasters:', data)
       setActiveDisasters(data || [])
       // 첫 번째 재난을 자동 선택
       if (data && data.length > 0 && !selectedDisasterId) {
