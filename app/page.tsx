@@ -9,6 +9,7 @@ import AIBriefing from '@/components/AIBriefing'
 import SensorDataDashboard from '@/components/SensorDataDashboard'
 import DisasterTabs from '@/components/DisasterTabs'
 import CommunicationPanel from '@/components/CommunicationPanel'
+import Building3DModal from '@/components/Building3DModal'
 
 type RightPanelTab = 'report' | 'sensors' | 'communication' | 'briefing'
 
@@ -16,6 +17,7 @@ export default function Home() {
   const [activeDisasters, setActiveDisasters] = useState<any[]>([])
   const [selectedDisasterId, setSelectedDisasterId] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<RightPanelTab>('report')
+  const [is3DModalOpen, setIs3DModalOpen] = useState(false)
 
   // DB에서 활성 재난 데이터 로드 (RPC 함수 사용)
   const loadActiveDisasters = async () => {
@@ -69,6 +71,11 @@ export default function Home() {
       })
     }
   }, [])
+
+  // 선택된 재난 정보
+  const selectedDisaster = useMemo(() => {
+    return activeDisasters.find(d => d.id === selectedDisasterId) || null
+  }, [activeDisasters, selectedDisasterId])
 
   return (
     <main className="min-h-screen bg-gray-50">
@@ -157,6 +164,19 @@ export default function Home() {
               </div>
             </div>
 
+            {/* 3D 보기 버튼 */}
+            {selectedDisaster && selectedDisaster.floor && (
+              <div className="mt-4">
+                <button
+                  onClick={() => setIs3DModalOpen(true)}
+                  className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-4 py-3 rounded-lg font-bold shadow-lg transition flex items-center justify-center gap-2"
+                >
+                  🏢 3D 건물 시각화 보기
+                  <span className="text-xs bg-white/20 px-2 py-0.5 rounded">NEW</span>
+                </button>
+              </div>
+            )}
+
             <div className="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 rounded">
               <p className="text-sm text-blue-800">
                 💡 본 시스템은 프로토타입 단계로, 지도 마커 및 경로 표시 기능이 지속적으로 개선되고 있습니다.
@@ -244,6 +264,13 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      {/* 3D 건물 시각화 모달 */}
+      <Building3DModal
+        isOpen={is3DModalOpen}
+        onClose={() => setIs3DModalOpen(false)}
+        disaster={selectedDisaster}
+      />
     </main>
   )
 }
