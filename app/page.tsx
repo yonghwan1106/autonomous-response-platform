@@ -6,9 +6,11 @@ import { supabase } from '@/lib/supabase/client'
 import ControlMap from '@/components/ControlMap'
 import DisasterReportForm from '@/components/DisasterReportForm'
 import AIBriefing from '@/components/AIBriefing'
+import SensorDataDashboard from '@/components/SensorDataDashboard'
 
 export default function Home() {
   const [activeDisasters, setActiveDisasters] = useState<any[]>([])
+  const [selectedDisasterId, setSelectedDisasterId] = useState<string | null>(null)
 
   // DB에서 활성 재난 데이터 로드 (RPC 함수 사용)
   const loadActiveDisasters = async () => {
@@ -20,6 +22,10 @@ export default function Home() {
     } else {
       console.log('Loaded active disasters:', data)
       setActiveDisasters(data || [])
+      // 첫 번째 재난을 자동 선택
+      if (data && data.length > 0 && !selectedDisasterId) {
+        setSelectedDisasterId(data[0].id)
+      }
     }
   }
 
@@ -159,6 +165,9 @@ export default function Home() {
               <h2 className="text-xl font-semibold mb-4">신규 재난 접수</h2>
               <DisasterReportForm onSuccess={handleDisasterSuccess} />
             </div>
+
+            {/* 센서 데이터 대시보드 */}
+            <SensorDataDashboard disasterId={selectedDisasterId} />
 
             {/* AI 브리핑 */}
             <AIBriefing />
