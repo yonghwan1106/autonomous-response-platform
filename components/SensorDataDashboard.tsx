@@ -136,7 +136,7 @@ export default function SensorDataDashboard({ disasterId }: { disasterId: string
 
     const { error: thermalError } = await supabase.from('sensor_data').insert({
       disaster_id: disasterId,
-      unit_id: 'simulated-drone',
+      unit_id: null, // 시뮬레이션 데이터는 unit_id null
       data_type: 'thermal',
       data: thermalData,
       confidence: 0.85 + Math.random() * 0.1
@@ -157,7 +157,7 @@ export default function SensorDataDashboard({ disasterId }: { disasterId: string
 
     const { error: gasError } = await supabase.from('sensor_data').insert({
       disaster_id: disasterId,
-      unit_id: 'simulated-robot',
+      unit_id: null, // 시뮬레이션 데이터는 unit_id null
       data_type: 'gas',
       data: gasData,
       confidence: 0.9 + Math.random() * 0.05
