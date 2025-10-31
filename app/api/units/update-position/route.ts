@@ -6,21 +6,17 @@ export async function POST(request: NextRequest) {
     const { unitId } = await request.json()
 
     if (!unitId) {
-      console.error('❌ No unitId provided')
       return NextResponse.json(
         { error: 'Unit ID is required' },
         { status: 400 }
       )
     }
 
-    console.log('🔄 Updating position for unit:', unitId)
-
     // 유닛 정보 가져오기 (RPC 사용하여 GeoJSON 형식으로)
     const { data: units, error: unitError } = await supabase
       .rpc('get_active_units')
 
     if (unitError || !units) {
-      console.error('❌ Failed to fetch units:', unitError)
       return NextResponse.json(
         { error: 'Failed to fetch units' },
         { status: 500 }
@@ -30,7 +26,6 @@ export async function POST(request: NextRequest) {
     const unit = units.find((u: any) => u.id === unitId)
 
     if (!unit) {
-      console.error('❌ Unit not found:', unitId)
       return NextResponse.json(
         { error: 'Unit not found' },
         { status: 404 }
@@ -57,9 +52,8 @@ export async function POST(request: NextRequest) {
     const currentLocation = unit.current_location
 
     if (!currentLocation || !currentLocation.coordinates || currentLocation.coordinates.length !== 2) {
-      console.error('❌ Invalid current location:', currentLocation)
       return NextResponse.json(
-        { error: 'Invalid current location', currentLocation },
+        { error: 'Invalid current location' },
         { status: 400 }
       )
     }

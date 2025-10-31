@@ -61,8 +61,6 @@ export default function ControlMap() {
     if (!mapRef.current || mapInstance.current) return
 
     const loadKakaoMap = () => {
-      console.log('카카오맵 로드 시작')
-      console.log('API 키:', process.env.NEXT_PUBLIC_KAKAO_APP_KEY)
 
       if (!window.kakao || !window.kakao.maps) {
         // 카카오맵 스크립트 로드 (clusterer 라이브러리 포함)
@@ -72,24 +70,18 @@ export default function ControlMap() {
         script.type = 'text/javascript'
         script.async = false
 
-        console.log('스크립트 URL:', script.src)
-
         script.onload = () => {
-          console.log('스크립트 로드 성공')
           if (window.kakao && window.kakao.maps) {
             window.kakao.maps.load(() => {
-              console.log('카카오맵 초기화 성공')
               initMap()
             })
           }
         }
         script.onerror = (error) => {
           console.error('카카오맵 스크립트 로드 실패:', error)
-          console.error('스크립트 URL:', script.src)
         }
         document.head.appendChild(script)
       } else {
-        console.log('카카오맵 이미 로드됨')
         window.kakao.maps.load(() => {
           initMap()
         })
@@ -214,8 +206,6 @@ export default function ControlMap() {
 
     // 재난 마커 추가
     disasters.forEach(disaster => {
-      console.log('Processing disaster:', disaster.id, 'location:', disaster.location)
-
       if (!disaster.location || !disaster.location.coordinates) {
         console.warn('Disaster has no location:', disaster.id, disaster)
         return
@@ -225,7 +215,6 @@ export default function ControlMap() {
       const [lng, lat] = disaster.location.coordinates
 
       const position = new window.kakao.maps.LatLng(lat, lng)
-      console.log('Creating marker at:', lat, lng)
 
       const marker = new window.kakao.maps.Marker({
         position,
@@ -253,15 +242,11 @@ export default function ControlMap() {
 
     // 선발대 유닛 마커 및 경로 추가
     units.forEach(unit => {
-      console.log('🚁 Processing unit:', unit.unit_type, unit.id)
-
       if (!unit.current_location?.coordinates) {
-        console.log('❌ No coordinates for unit:', unit.id)
         return
       }
 
       const [lng, lat] = unit.current_location.coordinates
-      console.log(`📍 Unit ${unit.unit_type} position:`, { lat, lng })
 
       const position = new window.kakao.maps.LatLng(lat, lng)
 
@@ -270,8 +255,6 @@ export default function ControlMap() {
         map: null, // 클러스터링을 위해 나중에 추가
         title: unit.unit_type
       })
-
-      console.log(`✅ Marker created for ${unit.unit_type}:`, marker)
 
       // 유닛 타입별 아이콘
       let imageSrc = ''
@@ -391,7 +374,6 @@ export default function ControlMap() {
     // 클러스터링 적용 또는 개별 마커 표시
     if (clusteringEnabled && allMarkers.length > 10 && window.kakao.maps.MarkerClusterer) {
       // 마커가 10개 이상일 때 클러스터링 사용
-      console.log(`🎯 Clustering enabled for ${allMarkers.length} markers`)
 
       clustererRef.current = new window.kakao.maps.MarkerClusterer({
         map: mapInstance.current,
@@ -436,7 +418,6 @@ export default function ControlMap() {
       })
     } else {
       // 마커가 적거나 클러스터링 비활성화 시 개별 마커 표시
-      console.log(`📍 Displaying ${allMarkers.length} individual markers`)
       allMarkers.forEach(marker => {
         marker.setMap(mapInstance.current)
       })
@@ -451,7 +432,6 @@ export default function ControlMap() {
       console.error('Error loading disasters:', error)
       setDisasters([])
     } else {
-      console.log('Loaded disasters with GeoJSON location:', data)
       setDisasters(data || [])
     }
   }
@@ -461,14 +441,9 @@ export default function ControlMap() {
     const { data, error } = await supabase.rpc('get_active_units')
 
     if (error) {
-      console.error('❌ Error loading units:', error)
+      console.error('Error loading units:', error)
       setUnits([])
     } else {
-      console.log('✅ Loaded units:', data)
-      console.log('📊 Units count:', data?.length || 0)
-      if (data && data.length > 0) {
-        console.log('🚗 First unit sample:', data[0])
-      }
       setUnits(data || [])
     }
   }
@@ -481,7 +456,6 @@ export default function ControlMap() {
       console.error('Error loading hazards:', error)
       setHazards([])
     } else {
-      console.log('Loaded hazards with GeoJSON location:', data)
       setHazards(data || [])
     }
   }

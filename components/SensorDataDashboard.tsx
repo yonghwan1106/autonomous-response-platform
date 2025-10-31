@@ -37,7 +37,6 @@ export default function SensorDataDashboard({ disasterId }: { disasterId: string
     loadSensorData()
 
     // 즉시 첫 센서 데이터 생성
-    console.log('🌡️ Starting sensor simulation for disaster:', disasterId)
     simulateSensorData()
 
     // 센서 데이터 시뮬레이션 (5초마다)
@@ -126,8 +125,6 @@ export default function SensorDataDashboard({ disasterId }: { disasterId: string
   const simulateSensorData = async () => {
     if (!disasterId) return
 
-    console.log('🌡️ Simulating sensor data for disaster:', disasterId)
-
     // 열화상 센서 데이터 시뮬레이션
     const thermalData = {
       temperature: Math.round(200 + Math.random() * 300), // 200-500°C
@@ -144,8 +141,6 @@ export default function SensorDataDashboard({ disasterId }: { disasterId: string
 
     if (thermalError) {
       console.error('❌ Failed to insert thermal data:', thermalError)
-    } else {
-      console.log('✅ Thermal data inserted:', thermalData)
     }
 
     // 가스 센서 데이터 시뮬레이션
@@ -165,8 +160,6 @@ export default function SensorDataDashboard({ disasterId }: { disasterId: string
 
     if (gasError) {
       console.error('❌ Failed to insert gas data:', gasError)
-    } else {
-      console.log('✅ Gas data inserted:', gasData)
     }
   }
 
