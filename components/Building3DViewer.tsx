@@ -34,8 +34,10 @@ export default function Building3DViewer({
       0.1,
       1000
     )
-    camera.position.set(20, 15, 20)
-    camera.lookAt(0, 0, 0)
+    // 건물 중간 높이를 바라보도록 설정 (층수 * 층 높이 / 2)
+    const buildingCenterHeight = (floors * 3) / 2
+    camera.position.set(20, buildingCenterHeight, 20)
+    camera.lookAt(0, buildingCenterHeight, 0)
 
     // Renderer 설정
     const renderer = new THREE.WebGLRenderer({ antialias: true })
@@ -47,6 +49,7 @@ export default function Building3DViewer({
 
     // Controls 설정
     const controls = new OrbitControls(camera, renderer.domElement)
+    controls.target.set(0, buildingCenterHeight, 0) // 건물 중간을 중심으로 회전
     controls.enableDamping = true
     controls.dampingFactor = 0.05
     controls.minDistance = 10

@@ -39,15 +39,15 @@ export default function Building3DModal({ isOpen, onClose, disaster }: Building3
   const disasterFloor = disaster.floor
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/70 backdrop-blur-sm pointer-events-auto"
         onClick={onClose}
       />
 
       {/* Modal */}
-      <div className="relative bg-white rounded-lg shadow-2xl w-11/12 h-5/6 max-w-6xl overflow-hidden">
+      <div className="relative bg-white rounded-lg shadow-2xl w-11/12 h-5/6 max-w-6xl overflow-hidden pointer-events-auto">
         {/* Header */}
         <div className="bg-gradient-to-r from-emergency-red to-red-600 text-white px-6 py-4 flex items-center justify-between">
           <div>
