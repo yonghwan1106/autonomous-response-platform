@@ -40,11 +40,12 @@ export default function GuidePage() {
             <li><a href="#overview" className="hover:underline text-lg">1. 프로젝트 개요</a></li>
             <li><a href="#features" className="hover:underline text-lg">2. 주요 기능</a></li>
             <li><a href="#disaster-report" className="hover:underline text-lg">3. 재난 접수하기</a></li>
-            <li><a href="#sensor-risk" className="hover:underline text-lg">4. 센서 데이터 및 위험도 분석</a></li>
-            <li><a href="#communication" className="hover:underline text-lg">5. 관제-현장 통신</a></li>
-            <li><a href="#ai-briefing" className="hover:underline text-lg">6. AI 상황 브리핑</a></li>
-            <li><a href="#monitoring" className="hover:underline text-lg">7. 실시간 모니터링</a></li>
-            <li><a href="#tech-stack" className="hover:underline text-lg">8. 기술 스택</a></li>
+            <li><a href="#3d-viewer" className="hover:underline text-lg">4. 3D 건물 시각화</a></li>
+            <li><a href="#sensor-risk" className="hover:underline text-lg">5. 센서 데이터 및 위험도 분석</a></li>
+            <li><a href="#communication" className="hover:underline text-lg">6. 관제-현장 통신</a></li>
+            <li><a href="#ai-briefing" className="hover:underline text-lg">7. AI 상황 브리핑</a></li>
+            <li><a href="#monitoring" className="hover:underline text-lg">8. 실시간 모니터링</a></li>
+            <li><a href="#tech-stack" className="hover:underline text-lg">9. 기술 스택</a></li>
           </ul>
         </nav>
 
@@ -117,6 +118,13 @@ export default function GuidePage() {
                 관제센터와 현장 유닛 간 실시간 메시지 송수신 및 긴급 알림 전송이 가능합니다.
               </p>
             </div>
+
+            <div className="border-l-4 border-cyan-500 pl-4 py-2">
+              <h3 className="font-bold text-lg mb-2">🏢 3D 건물 시각화</h3>
+              <p className="text-gray-700">
+                Three.js 기반 3D 렌더링으로 재난 발생 건물의 층별 구조를 입체적으로 시각화합니다.
+              </p>
+            </div>
           </div>
         </section>
 
@@ -159,9 +167,56 @@ export default function GuidePage() {
           </div>
         </section>
 
-        {/* 4. 센서 데이터 및 위험도 분석 */}
+        {/* 4. 3D 건물 시각화 */}
+        <section id="3d-viewer" className="bg-white rounded-lg shadow-md p-8 mb-8">
+          <h2 className="text-3xl font-bold mb-6 text-gray-800">4. 3D 건물 시각화</h2>
+
+          <div className="space-y-4">
+            <p className="text-gray-700">
+              층수 정보가 포함된 재난을 선택하면 &ldquo;🏢 3D 건물 시각화 보기&rdquo; 버튼이 나타나며,
+              클릭 시 Three.js 기반의 실시간 3D 렌더링 화면을 확인할 수 있습니다.
+            </p>
+
+            <div className="bg-cyan-50 p-4 rounded-lg">
+              <h3 className="font-semibold mb-2">🎮 3D 뷰어 조작법</h3>
+              <ul className="list-disc list-inside space-y-1 text-gray-700">
+                <li><strong>마우스 드래그:</strong> 건물을 360도 회전하여 모든 각도에서 확인</li>
+                <li><strong>마우스 휠:</strong> 확대/축소로 상세 구조 파악</li>
+                <li><strong>자동 회전:</strong> 화염 파티클이 자동으로 애니메이션</li>
+                <li><strong>ESC 키:</strong> 모달 닫기</li>
+              </ul>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="border-l-4 border-blue-500 pl-4">
+                <h4 className="font-bold mb-1">💙 일반 층</h4>
+                <p className="text-sm text-gray-700">파란색 반투명 박스로 표시되며 층수 라벨이 우측에 표시됩니다</p>
+              </div>
+              <div className="border-l-4 border-red-500 pl-4">
+                <h4 className="font-bold mb-1">🔥 재난 발생 층</h4>
+                <p className="text-sm text-gray-700">빨간색 발광 효과와 화염 파티클로 강조 표시됩니다</p>
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-lg border-l-4 border-purple-500">
+              <p className="text-gray-800">
+                <strong>🚀 기술 스택:</strong> Three.js WebGL 렌더링, OrbitControls 카메라 제어,
+                Points 파티클 시스템, MeshStandardMaterial PBR 셰이딩
+              </p>
+            </div>
+
+            <div className="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500">
+              <p className="text-yellow-900">
+                <strong>💡 프로토타입 단계:</strong> 실제 건물 도면 데이터(BIM, IFC)와 연동 시
+                정확한 내부 구조, 계단, 출입구 등을 3D로 표시 가능합니다.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* 5. 센서 데이터 및 위험도 분석 */}
         <section id="sensor-risk" className="bg-white rounded-lg shadow-md p-8 mb-8">
-          <h2 className="text-3xl font-bold mb-6 text-gray-800">4. 센서 데이터 및 위험도 분석</h2>
+          <h2 className="text-3xl font-bold mb-6 text-gray-800">5. 센서 데이터 및 위험도 분석</h2>
 
           <div className="space-y-4">
             <p className="text-gray-700">
@@ -202,9 +257,9 @@ export default function GuidePage() {
           </div>
         </section>
 
-        {/* 5. 관제-현장 통신 */}
+        {/* 6. 관제-현장 통신 */}
         <section id="communication" className="bg-white rounded-lg shadow-md p-8 mb-8">
-          <h2 className="text-3xl font-bold mb-6 text-gray-800">5. 관제-현장 통신</h2>
+          <h2 className="text-3xl font-bold mb-6 text-gray-800">6. 관제-현장 통신</h2>
 
           <div className="space-y-4">
             <p className="text-gray-700">
@@ -238,9 +293,9 @@ export default function GuidePage() {
           </div>
         </section>
 
-        {/* 6. AI 상황 브리핑 */}
+        {/* 7. AI 상황 브리핑 */}
         <section id="ai-briefing" className="bg-white rounded-lg shadow-md p-8 mb-8">
-          <h2 className="text-3xl font-bold mb-6 text-gray-800">6. AI 상황 브리핑</h2>
+          <h2 className="text-3xl font-bold mb-6 text-gray-800">7. AI 상황 브리핑</h2>
 
           <div className="space-y-4">
             <p className="text-gray-700">
@@ -269,9 +324,9 @@ export default function GuidePage() {
           </div>
         </section>
 
-        {/* 7. 실시간 모니터링 */}
+        {/* 8. 실시간 모니터링 */}
         <section id="monitoring" className="bg-white rounded-lg shadow-md p-8 mb-8">
-          <h2 className="text-3xl font-bold mb-6 text-gray-800">7. 실시간 모니터링</h2>
+          <h2 className="text-3xl font-bold mb-6 text-gray-800">8. 실시간 모니터링</h2>
 
           <div className="space-y-4">
             <div>
@@ -302,9 +357,9 @@ export default function GuidePage() {
           </div>
         </section>
 
-        {/* 8. 기술 스택 */}
+        {/* 9. 기술 스택 */}
         <section id="tech-stack" className="bg-white rounded-lg shadow-md p-8 mb-8">
-          <h2 className="text-3xl font-bold mb-6 text-gray-800">8. 기술 스택</h2>
+          <h2 className="text-3xl font-bold mb-6 text-gray-800">9. 기술 스택</h2>
 
           <div className="grid md:grid-cols-2 gap-4">
             <div className="border rounded-lg p-4">
@@ -315,6 +370,7 @@ export default function GuidePage() {
                 <li>• TypeScript</li>
                 <li>• Tailwind CSS (반응형 디자인)</li>
                 <li>• Recharts (센서 데이터 시각화)</li>
+                <li>• Three.js (3D 건물 렌더링)</li>
                 <li>• Kakao Maps SDK</li>
               </ul>
             </div>

@@ -246,6 +246,21 @@ export default function AboutPage() {
                 <li>터치 친화적 인터페이스</li>
               </ul>
             </div>
+
+            <div className="border-2 border-indigo-200 rounded-lg p-6">
+              <h3 className="text-xl font-bold text-indigo-800 mb-4 flex items-center gap-2">
+                <span>🏢</span> 3D 건물 시각화
+              </h3>
+              <p className="text-gray-700 mb-3">
+                Three.js 기반 실시간 3D 렌더링으로 재난 건물을 입체적으로 시각화
+              </p>
+              <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
+                <li>층별 구조 3D 표현</li>
+                <li>재난 발생 층 강조 표시</li>
+                <li>화염 파티클 애니메이션</li>
+                <li>OrbitControls 360도 회전</li>
+              </ul>
+            </div>
           </div>
         </section>
 
@@ -301,6 +316,7 @@ export default function AboutPage() {
                 <span className="px-3 py-1 bg-gray-100 text-gray-800 rounded text-sm">TypeScript</span>
                 <span className="px-3 py-1 bg-gray-100 text-gray-800 rounded text-sm">Tailwind CSS</span>
                 <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded text-sm">Recharts</span>
+                <span className="px-3 py-1 bg-indigo-100 text-indigo-800 rounded text-sm">Three.js</span>
               </div>
             </div>
 
