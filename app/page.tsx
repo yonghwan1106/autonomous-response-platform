@@ -10,12 +10,12 @@ import SensorDataDashboard from '@/components/SensorDataDashboard'
 import DisasterTabs from '@/components/DisasterTabs'
 import CommunicationPanel from '@/components/CommunicationPanel'
 
-type RightPanelTab = 'report' | 'disasters' | 'sensors' | 'communication' | 'briefing'
+type RightPanelTab = 'report' | 'sensors' | 'communication' | 'briefing'
 
 export default function Home() {
   const [activeDisasters, setActiveDisasters] = useState<any[]>([])
   const [selectedDisasterId, setSelectedDisasterId] = useState<string | null>(null)
-  const [activeTab, setActiveTab] = useState<RightPanelTab>('disasters')
+  const [activeTab, setActiveTab] = useState<RightPanelTab>('report')
 
   // DB에서 활성 재난 데이터 로드 (RPC 함수 사용)
   const loadActiveDisasters = async () => {
@@ -166,16 +166,6 @@ export default function Home() {
             {/* 탭 헤더 */}
             <div className="flex border-b border-gray-200 bg-gray-50">
               <button
-                onClick={() => setActiveTab('disasters')}
-                className={`flex-1 px-4 py-3 text-sm font-semibold transition-colors ${
-                  activeTab === 'disasters'
-                    ? 'bg-white text-emergency-red border-b-2 border-emergency-red'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                }`}
-              >
-                재난 현황
-              </button>
-              <button
                 onClick={() => setActiveTab('report')}
                 className={`flex-1 px-4 py-3 text-sm font-semibold transition-colors ${
                   activeTab === 'report'
@@ -219,18 +209,20 @@ export default function Home() {
 
             {/* 탭 컨텐츠 */}
             <div className="p-4">
-              {activeTab === 'disasters' && (
-                <DisasterTabs
-                  disasters={activeDisasters}
-                  selectedId={selectedDisasterId}
-                  onSelect={(id) => setSelectedDisasterId(id)}
-                />
-              )}
-
               {activeTab === 'report' && (
-                <div>
-                  <h2 className="text-xl font-semibold mb-4">신규 재난 접수</h2>
-                  <DisasterReportForm onSuccess={handleDisasterSuccess} />
+                <div className="space-y-6">
+                  <div>
+                    <h2 className="text-xl font-semibold mb-4">신규 재난 접수</h2>
+                    <DisasterReportForm onSuccess={handleDisasterSuccess} />
+                  </div>
+
+                  <div className="border-t pt-6">
+                    <DisasterTabs
+                      disasters={activeDisasters}
+                      selectedId={selectedDisasterId}
+                      onSelect={(id) => setSelectedDisasterId(id)}
+                    />
+                  </div>
                 </div>
               )}
 
