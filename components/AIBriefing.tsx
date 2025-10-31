@@ -64,9 +64,9 @@ export default function AIBriefing() {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-4">
+    <div>
       <h2 className="text-xl font-semibold mb-4">AI 상황 브리핑</h2>
-      <div className="bg-gray-50 rounded p-3 h-[200px] overflow-y-auto">
+      <div className="space-y-3">
         {loading ? (
           <div className="flex items-center justify-center h-full">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emergency-red"></div>
@@ -74,7 +74,7 @@ export default function AIBriefing() {
         ) : briefings.length === 0 ? (
           <p className="text-sm text-gray-600">실시간 AI 브리핑이 표시됩니다...</p>
         ) : (
-          <div className="space-y-3">
+          <>
             {briefings.map((briefing) => (
               <div
                 key={briefing.id}
@@ -100,7 +100,7 @@ export default function AIBriefing() {
                 />
               </div>
             ))}
-          </div>
+          </>
         )}
       </div>
     </div>
