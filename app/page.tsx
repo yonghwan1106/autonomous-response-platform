@@ -76,6 +76,9 @@ export default function Home() {
         <header className="bg-emergency-red text-white py-4 px-4 md:px-6 rounded-lg shadow-lg mb-4 md:mb-6">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
+              <div className="inline-block bg-white/20 px-2 md:px-3 py-0.5 md:py-1 rounded text-[10px] md:text-xs font-semibold mb-2">
+                자율주행 일상 서비스 아이디어 국민제안 공모전 출품작
+              </div>
               <h1 className="text-xl md:text-3xl font-bold">자율주행 선발대 관제 플랫폼</h1>
               <p className="text-xs md:text-sm mt-1 md:mt-2">골든타임 확보를 위한 실시간 재난 관제 시스템</p>
             </div>
