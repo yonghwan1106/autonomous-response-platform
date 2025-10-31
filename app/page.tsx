@@ -98,9 +98,56 @@ export default function Home() {
           <div className="lg:col-span-2 bg-white rounded-lg shadow-md p-4">
             <h2 className="text-xl font-semibold mb-4">통합 관제 지도</h2>
             <ControlMap />
-            <div className="mt-3 p-3 bg-yellow-50 border-l-4 border-yellow-400 rounded">
-              <p className="text-sm text-yellow-800">
-                ⚠️ 현재 개발 중이며, 지도 일부 마커 기능은 정확한 위치 표시를 못하고 있습니다.
+
+            {/* 범례 - 지도 아래 */}
+            <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+              <h3 className="font-bold mb-3 text-sm text-gray-800">범례</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <div className="font-semibold text-xs text-gray-600 mb-2">마커</div>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-5 h-5 bg-red-500 rounded-full flex-shrink-0"></div>
+                      <span className="text-xs">재난 발생지</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-5 h-5 bg-blue-500 rounded-full flex-shrink-0"></div>
+                      <span className="text-xs">모선 차량</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-5 h-5 bg-yellow-500 rounded-full flex-shrink-0"></div>
+                      <span className="text-xs">정찰 드론 (클릭→열화상)</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-5 h-5 bg-green-500 rounded-full flex-shrink-0"></div>
+                      <span className="text-xs">지상 로봇</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <div className="font-semibold text-xs text-gray-600 mb-2">이동 경로</div>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-10 h-1.5 bg-blue-500 rounded flex-shrink-0"></div>
+                      <span className="text-xs">모선 경로</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-10 h-1.5 bg-yellow-500 rounded flex-shrink-0"></div>
+                      <span className="text-xs">드론 경로</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-10 h-1.5 bg-green-500 rounded flex-shrink-0"></div>
+                      <span className="text-xs">로봇 경로</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 rounded">
+              <p className="text-sm text-blue-800">
+                💡 본 시스템은 프로토타입 단계로, 지도 마커 및 경로 표시 기능이 지속적으로 개선되고 있습니다.
               </p>
             </div>
           </div>

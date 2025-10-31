@@ -419,48 +419,8 @@ export default function ControlMap() {
   }
 
   return (
-    <div className="relative">
+    <>
       <div ref={mapRef} className="w-full h-[600px] rounded-lg" />
-
-      {/* 범례 */}
-      <div className="absolute top-4 right-4 bg-white p-4 rounded-lg shadow-xl text-xs z-50 border-2 border-gray-200">
-        <h3 className="font-bold mb-3 text-sm text-gray-800">범례</h3>
-        <div className="space-y-2">
-          <div className="font-semibold text-xs text-gray-600 mb-1">마커</div>
-          <div className="flex items-center gap-2">
-            <div className="w-5 h-5 bg-red-500 rounded-full flex-shrink-0"></div>
-            <span className="text-xs">재난 발생지</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-5 h-5 bg-blue-500 rounded-full flex-shrink-0"></div>
-            <span className="text-xs">모선 차량</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-5 h-5 bg-yellow-500 rounded-full flex-shrink-0"></div>
-            <span className="text-xs">정찰 드론 (클릭→열화상)</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-5 h-5 bg-green-500 rounded-full flex-shrink-0"></div>
-            <span className="text-xs">지상 로봇</span>
-          </div>
-
-          <div className="border-t border-gray-300 my-2"></div>
-
-          <div className="font-semibold text-xs text-gray-600 mb-1">이동 경로</div>
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-1.5 bg-blue-500 rounded flex-shrink-0"></div>
-            <span className="text-xs">모선 경로</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-1.5 bg-yellow-500 rounded flex-shrink-0"></div>
-            <span className="text-xs">드론 경로</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-1.5 bg-green-500 rounded flex-shrink-0"></div>
-            <span className="text-xs">로봇 경로</span>
-          </div>
-        </div>
-      </div>
 
       {/* 열화상 영상 모달 */}
       <ThermalVideoModal
@@ -469,6 +429,6 @@ export default function ControlMap() {
         unitId={selectedUnit?.id || ''}
         unitType={selectedUnit?.type || ''}
       />
-    </div>
+    </>
   )
 }
