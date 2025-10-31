@@ -176,23 +176,51 @@ export default function AboutPage() {
               </div>
             </div>
 
-            <div className="border-2 border-red-200 rounded-lg p-6">
-              <h3 className="text-xl font-bold text-red-800 mb-4 flex items-center gap-2">
-                <span>🔥</span> 열화상 영상 스트리밍
+            <div className="border-2 border-orange-200 rounded-lg p-6">
+              <h3 className="text-xl font-bold text-orange-800 mb-4 flex items-center gap-2">
+                <span>🎯</span> AI 위험도 분석
               </h3>
               <p className="text-gray-700 mb-3">
-                드론의 열화상 카메라로 요구조자 위치 및 화점 실시간 감지
+                실시간 센서 데이터를 AI가 분석하여 위험도 점수(0-100) 자동 산출
               </p>
               <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
-                <li>AI 객체 감지 (신뢰도 표시)</li>
-                <li>실시간 온도 측정</li>
-                <li>감지 위치 지도 표시</li>
+                <li>온도, CO, CH4, H2S 종합 분석</li>
+                <li>5단계 위험 레벨 분류</li>
+                <li>실시간 그래프 시각화</li>
+              </ul>
+            </div>
+
+            <div className="border-2 border-red-200 rounded-lg p-6">
+              <h3 className="text-xl font-bold text-red-800 mb-4 flex items-center gap-2">
+                <span>🔥</span> 센서 데이터 모니터링
+              </h3>
+              <p className="text-gray-700 mb-3">
+                드론 및 로봇의 실시간 센서 데이터를 차트로 시각화
+              </p>
+              <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
+                <li>열화상 온도 추이 (Line Chart)</li>
+                <li>가스 농도 추이 (Bar Chart)</li>
+                <li>위험 수준 자동 경보</li>
+              </ul>
+            </div>
+
+            <div className="border-2 border-cyan-200 rounded-lg p-6">
+              <h3 className="text-xl font-bold text-cyan-800 mb-4 flex items-center gap-2">
+                <span>💬</span> 관제-현장 통신
+              </h3>
+              <p className="text-gray-700 mb-3">
+                관제센터와 현장 유닛 간 실시간 양방향 메시지 통신
+              </p>
+              <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
+                <li>텍스트 메시지 송수신</li>
+                <li>긴급 알림 버튼 (주의/철수/지원)</li>
+                <li>메시지 히스토리 관리</li>
               </ul>
             </div>
 
             <div className="border-2 border-green-200 rounded-lg p-6">
               <h3 className="text-xl font-bold text-green-800 mb-4 flex items-center gap-2">
-                <span>🤖</span> AI 작전 계획 생성
+                <span>🤖</span> AI 상황 브리핑
               </h3>
               <p className="text-gray-700 mb-3">
                 Claude AI가 재난 상황을 분석하여 자동으로 구조 작전 계획 수립
@@ -207,16 +235,15 @@ export default function AboutPage() {
 
             <div className="border-2 border-purple-200 rounded-lg p-6">
               <h3 className="text-xl font-bold text-purple-800 mb-4 flex items-center gap-2">
-                <span>📊</span> 통합 관제 대시보드
+                <span>📱</span> 모바일 반응형
               </h3>
               <p className="text-gray-700 mb-3">
-                모든 정보를 하나의 화면에서 실시간으로 모니터링
+                모바일, 태블릿, 데스크톱 모든 기기에서 최적화된 UI
               </p>
               <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
-                <li>재난 발생 현황</li>
-                <li>선발대 위치 추적</li>
-                <li>AI 상황 브리핑</li>
-                <li>위험 요소 오버레이</li>
+                <li>Tailwind 반응형 디자인</li>
+                <li>탭 기반 공간 최적화</li>
+                <li>터치 친화적 인터페이스</li>
               </ul>
             </div>
           </div>
@@ -273,6 +300,7 @@ export default function AboutPage() {
                 <span className="px-3 py-1 bg-gray-100 text-gray-800 rounded text-sm">React 19</span>
                 <span className="px-3 py-1 bg-gray-100 text-gray-800 rounded text-sm">TypeScript</span>
                 <span className="px-3 py-1 bg-gray-100 text-gray-800 rounded text-sm">Tailwind CSS</span>
+                <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded text-sm">Recharts</span>
               </div>
             </div>
 
