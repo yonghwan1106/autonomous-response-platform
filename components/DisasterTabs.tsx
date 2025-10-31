@@ -42,7 +42,7 @@ export default function DisasterTabs({ disasters, selectedId, onSelect }: Disast
     <div>
       <h2 className="text-xl font-semibold mb-4">활성 재난 현황 ({disasters.length})</h2>
 
-      <div className="space-y-2 max-h-[400px] overflow-y-auto">
+      <div className="space-y-2">
         {disasters.map((disaster) => {
           const style = getDisasterStyle(disaster.disaster_type)
           const isSelected = disaster.id === selectedId

@@ -114,8 +114,7 @@ export default function ControlMap() {
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'disasters' },
-        (payload) => {
-          console.log('Disaster change:', payload)
+        () => {
           loadDisasters()
         }
       )
@@ -135,8 +134,7 @@ export default function ControlMap() {
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'response_units' },
-        (payload) => {
-          console.log('Unit change:', payload)
+        () => {
           loadUnits()
         }
       )
@@ -156,8 +154,7 @@ export default function ControlMap() {
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'hazard_overlays' },
-        (payload) => {
-          console.log('Hazard change:', payload)
+        () => {
           loadHazards()
         }
       )

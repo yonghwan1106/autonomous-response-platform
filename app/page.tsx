@@ -44,8 +44,7 @@ export default function Home() {
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'disasters' },
-        (payload) => {
-          console.log('Disaster change detected:', payload)
+        () => {
           loadActiveDisasters()
         }
       )
@@ -220,7 +219,7 @@ export default function Home() {
             </div>
 
             {/* 탭 컨텐츠 */}
-            <div className="p-4" style={{ maxHeight: 'calc(100vh - 200px)', overflowY: 'auto' }}>
+            <div className="p-4">
               {activeTab === 'disasters' && (
                 <DisasterTabs
                   disasters={activeDisasters}

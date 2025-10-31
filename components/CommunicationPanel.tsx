@@ -39,7 +39,6 @@ export default function CommunicationPanel({ disasterId }: { disasterId: string 
           filter: `disaster_id=eq.${disasterId}`
         },
         (payload) => {
-          console.log('New message:', payload)
           setMessages((prev) => [...prev, payload.new as Message])
         }
       )
@@ -127,7 +126,7 @@ export default function CommunicationPanel({ disasterId }: { disasterId: string 
   }
 
   return (
-    <div className="flex flex-col h-[600px]">
+    <div className="flex flex-col" style={{ minHeight: '500px' }}>
       <h2 className="text-xl font-semibold mb-4">관제센터 ↔ 현장 유닛</h2>
 
       {/* 빠른 알림 버튼 */}
