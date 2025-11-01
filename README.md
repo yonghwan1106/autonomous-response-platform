@@ -33,7 +33,8 @@
 - **Row Level Security (RLS)**
 
 ### APIs
-- **카카오맵 API** - 지도 시각화 및 지오코딩
+- **카카오맵 API** - 지도 시각화 및 주소 검색
+- **네이버 클라우드 플랫폼 Directions 5 API** - 실시간 경로 탐색
 - **Claude Sonnet API** - AI 기반 자연어 처리 및 분석
 
 ### Deployment
@@ -46,7 +47,8 @@
 - Node.js 18+
 - npm 또는 yarn
 - Supabase 계정
-- Kakao Developers 계정
+- Kakao Developers 계정 (지도 표시용)
+- Naver Cloud Platform 계정 (경로 탐색용)
 - Anthropic API 키
 
 ### 2. 프로젝트 클론 및 의존성 설치
@@ -66,12 +68,32 @@ npm install
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 
-# Kakao Map
+# Kakao Map (for map display and geocoding)
 NEXT_PUBLIC_KAKAO_APP_KEY=your_kakao_javascript_key
+KAKAO_REST_API_KEY=your_kakao_rest_api_key
+
+# Naver Cloud Platform (for route calculation - Directions 5 API)
+NCP_CLIENT_ID=your_ncp_client_id
+NCP_CLIENT_SECRET=your_ncp_client_secret
 
 # Claude API
 ANTHROPIC_API_KEY=your_anthropic_api_key
 ```
+
+#### API 키 발급 방법
+
+**카카오맵 API**
+1. [Kakao Developers](https://developers.kakao.com/) 접속
+2. 애플리케이션 생성
+3. JavaScript 키 복사 → `NEXT_PUBLIC_KAKAO_APP_KEY`
+4. REST API 키 복사 → `KAKAO_REST_API_KEY`
+
+**네이버 클라우드 플랫폼 API**
+1. [NAVER CLOUD PLATFORM](https://www.ncloud.com/) 접속
+2. 콘솔 > AI·Application > AI·NAVER API > Application 등록
+3. Maps > Directions 선택
+4. Client ID 복사 → `NCP_CLIENT_ID`
+5. Client Secret 복사 → `NCP_CLIENT_SECRET`
 
 ### 4. Supabase 설정
 

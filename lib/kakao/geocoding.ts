@@ -53,7 +53,7 @@ export async function geocodeAddress(address: string): Promise<GeocodingResult |
 }
 
 /**
- * 카카오 길찾기 API를 사용한 경로 계산
+ * 네이버 클라우드 Directions 5 API를 사용한 경로 계산
  * 실제 도로 경로를 반환 (모선, 로봇용)
  */
 export async function calculateRoute(
@@ -61,57 +61,66 @@ export async function calculateRoute(
   destination: { lat: number; lng: number }
 ): Promise<{ lat: number; lng: number }[] | null> {
   try {
-    const apiKey = process.env.KAKAO_REST_API_KEY || process.env.NEXT_PUBLIC_KAKAO_APP_KEY
+    const apiKeyId = process.env.NCP_CLIENT_ID
+    const apiKey = process.env.NCP_CLIENT_SECRET
 
-    if (!apiKey) {
-      console.error('🔑 Kakao API key is not configured')
+    if (!apiKeyId || !apiKey) {
+      console.error('🔑 Naver Cloud Platform API keys are not configured')
+      console.error('Please set NCP_CLIENT_ID and NCP_CLIENT_SECRET in environment variables')
       return null
     }
 
     console.log('🛣️ Calculating route from', origin, 'to', destination)
 
+    // 네이버 Directions 5 API: start와 goal은 경도,위도 순서
+    const startParam = `${origin.lng},${origin.lat}`
+    const goalParam = `${destination.lng},${destination.lat}`
+
     const response = await fetch(
-      `https://apis-navi.kakaomobility.com/v1/directions?origin=${origin.lng},${origin.lat}&destination=${destination.lng},${destination.lat}&priority=RECOMMEND`,
+      `https://naveropenapi.apigw.ntruss.com/map-direction/v1/driving?start=${startParam}&goal=${goalParam}&option=traoptimal`,
       {
         headers: {
-          Authorization: `KakaoAK ${apiKey}`
+          'X-NCP-APIGW-API-KEY-ID': apiKeyId,
+          'X-NCP-APIGW-API-KEY': apiKey
         }
       }
     )
 
     if (!response.ok) {
       const errorText = await response.text()
-      console.error('❌ Kakao directions API error:', response.status, errorText)
+      console.error('❌ Naver Directions API error:', response.status, errorText)
       console.warn('⚠️ Falling back to simple route calculation')
       return null
     }
 
     const data = await response.json()
-    console.log('✅ Route API response:', data)
+    console.log('✅ Route API response code:', data.code)
+
+    // 응답 코드 확인
+    if (data.code !== 0) {
+      console.error('❌ Route calculation failed:', data.message)
+      return null
+    }
 
     // 응답에서 경로 좌표 추출
-    if (data.routes && data.routes.length > 0) {
-      const route = data.routes[0]
-      const sections = route.sections || []
+    if (data.route && data.route.traoptimal && data.route.traoptimal.length > 0) {
+      const routeData = data.route.traoptimal[0]
+      const path = routeData.path || []
 
       const waypoints: { lat: number; lng: number }[] = []
 
-      sections.forEach((section: any) => {
-        const roads = section.roads || []
-        roads.forEach((road: any) => {
-          if (road.vertexes && road.vertexes.length > 0) {
-            // vertexes는 [lng, lat, lng, lat, ...] 형식
-            for (let i = 0; i < road.vertexes.length; i += 2) {
-              waypoints.push({
-                lng: road.vertexes[i],
-                lat: road.vertexes[i + 1]
-              })
-            }
-          }
-        })
+      // path는 [[경도, 위도], [경도, 위도], ...] 형식
+      path.forEach((point: number[]) => {
+        if (point.length >= 2) {
+          waypoints.push({
+            lng: point[0],
+            lat: point[1]
+          })
+        }
       })
 
       console.log(`📍 Extracted ${waypoints.length} waypoints from route`)
+      console.log(`📏 Total distance: ${routeData.summary?.distance}m, Duration: ${routeData.summary?.duration}ms`)
       return waypoints.length > 0 ? waypoints : null
     }
 
