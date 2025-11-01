@@ -77,7 +77,7 @@ export async function calculateRoute(
     const goalParam = `${destination.lng},${destination.lat}`
 
     const response = await fetch(
-      `https://maps.apigw.ntruss.com/map-direction-15/v1/driving?start=${startParam}&goal=${goalParam}&option=traoptimal`,
+      `https://maps.apigw.ntruss.com/map-direction/v1/driving?start=${startParam}&goal=${goalParam}&option=traoptimal`,
       {
         headers: {
           'X-NCP-APIGW-API-KEY-ID': apiKeyId,

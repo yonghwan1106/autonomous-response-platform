@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is an autonomous response platform (자율주행 선발대 관제 플랫폼) - a web-based disaster management control center that integrates real-time data from autonomous response units (motherships, drones, robots) and uses AI to provide actionable intelligence to 119 emergency dispatch centers and rescue teams.
 
-**Tech Stack**: Next.js 15 (React 19, App Router), TypeScript, Tailwind CSS, Supabase (PostgreSQL + PostGIS + Realtime), Kakao Map API, Naver Cloud Platform Directions 5 API, Claude Sonnet API
+**Tech Stack**: Next.js 15 (React 19, App Router), TypeScript, Tailwind CSS, Supabase (PostgreSQL + PostGIS + Realtime), Kakao Map API, Naver Cloud Platform Directions API, Claude Sonnet API
 
 ## Development Commands
 
@@ -79,7 +79,7 @@ ANTHROPIC_API_KEY=                # From Anthropic Console (server-side only)
 
 **Notes**:
 - `KAKAO_REST_API_KEY` is required for server-side geocoding in `/api/disasters`. If not set, it will fallback to `NEXT_PUBLIC_KAKAO_APP_KEY`.
-- `NCP_CLIENT_ID` and `NCP_CLIENT_SECRET` are required for route calculation using Naver Cloud Platform Directions 5 API. Without these keys, the system will fall back to simple straight-line routes.
+- `NCP_CLIENT_ID` and `NCP_CLIENT_SECRET` are required for route calculation using Naver Cloud Platform Directions API. Without these keys, the system will fall back to simple straight-line routes.
 
 ## Important Notes
 
@@ -87,7 +87,7 @@ ANTHROPIC_API_KEY=                # From Anthropic Console (server-side only)
 - **Map Implementation**: Uses ControlMap with Kakao Maps SDK for real-time visualization
 - **Geocoding & Routing**:
   - `lib/kakao/geocoding.ts` provides `geocodeAddress()` using Kakao REST API (for address → coordinates conversion)
-  - `lib/kakao/geocoding.ts` provides `calculateRoute()` using Naver Cloud Platform Directions 5 API (for actual road routing)
+  - `lib/kakao/geocoding.ts` provides `calculateRoute()` using Naver Cloud Platform Directions API (for actual road routing)
 - **Claude Model**: Uses `claude-sonnet-4-20250514` for disaster report analysis
 - **PostGIS Required**: Database must have PostGIS extension enabled before running schema.sql
 - **Korean Language**: UI and disaster reports are primarily in Korean
